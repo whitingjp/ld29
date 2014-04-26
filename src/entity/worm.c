@@ -7,10 +7,10 @@
 worm worm_zero(const land* land)
 {
 	worm out;
-	int i;
 	whitgl_fvec start = whitgl_fvec_zero;
-	start.x = land->size.x/2;
+	start.x = land->size.x/2+50;
 	start.y = land->size.y;
+	int i;
 	for(i=0; i<WORM_NUM_SEGMENTS; i++)
 		out.segments[i] = start;
 	out.speed = whitgl_fvec_zero;

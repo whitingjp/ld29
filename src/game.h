@@ -1,12 +1,14 @@
 #ifndef GAME_H
 #define GAME_H
 
+#include <entity/egg.h>
 #include <entity/land.h>
 #include <entity/worm.h>
 
 typedef struct
 {
 	worm w;
+	egg e;
 	land* l;
 } game;
 

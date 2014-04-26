@@ -2,6 +2,7 @@
 
 #include <whitgl/sys.h>
 
+#include <image.h>
 
 void land_zero(land* l)
 {
@@ -91,11 +92,11 @@ void land_splat(land* land, whitgl_fcircle c)
 
 void land_draw(const land* land)
 {
-	whitgl_sys_image_from_data(4, land->size, land->data);
+	whitgl_sys_image_from_data(IMAGE_LAND, land->size, land->data);
 	whitgl_iaabb src = whitgl_iaabb_zero;
 	src.b = land->size;
 	whitgl_iaabb dest = src;
-	whitgl_sys_draw_tex_iaabb(4, src, dest);
+	whitgl_sys_draw_tex_iaabb(IMAGE_LAND, src, dest);
 }
 
 bool land_filled(const land* land, whitgl_ivec p)
