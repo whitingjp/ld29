@@ -21,10 +21,11 @@ int main()
 	setup.pixel_size = 2;
 
 	worm w = worm_zero();
-	land l = land_zero();
 
 	if(!whitgl_sys_init(setup))
 		return 1;
+
+	land l = land_zero();
 
 	whitgl_sound_init();
 	whitgl_input_init();
@@ -49,8 +50,8 @@ int main()
 		}
 
 		whitgl_sys_draw_init();
-		worm_draw(w);
 		land_draw(&l);
+		worm_draw(w);		
 		whitgl_sys_draw_finish();
 
 		if(whitgl_input_pressed(WHITGL_INPUT_ESC))

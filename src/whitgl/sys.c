@@ -517,6 +517,54 @@ void whitgl_sys_add_image(int id, const char* filename)
 
 	num_images++;
 }
+void whitgl_sys_image_from_data(int id, whitgl_ivec size, const unsigned char* data)
+{
+	if(num_images >= WHITGL_IMAGE_MAX)
+	{
+		WHITGL_LOG("ERR Too many images");
+		return;
+	}
+	int index = -1;
+	int i;
+	for(i=0; i<num_images; i++)
+	{
+		if(images[i].id == id)
+		{
+			index = i;
+			continue;
+		}
+	}
+
+	if(index == -1)
+	{
+		index = num_images;
+		images[index].gluint = SOIL_create_OGL_texture(data, size.x, size.y, 3, SOIL_CREATE_NEW_ID, SOIL_LOAD_L);
+	}
+	else
+	{
+		SOIL_create_OGL_texture(data, size.x, size.y, 3, images[index].gluint, SOIL_LOAD_L);
+	}
+	if( images[index].gluint == 0 )
+	{
+		WHITGL_LOG( "SOIL loading error: '%s'\n", SOIL_last_result() );
+		return;
+	}
+	images[index].id = id;
+	glBindTexture(GL_TEXTURE_2D, images[index].gluint);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+	int w, h;
+	glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_WIDTH, &w);
+	glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_HEIGHT, &h);
+	images[index].size.x = w;
+	images[index].size.y = h;
+
+
+	if(index == num_images)
+		num_images++;
+}
+
 double whitgl_sys_get_time()
 {
 	return glfwGetTime();

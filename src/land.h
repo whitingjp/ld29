@@ -7,7 +7,8 @@
 #define LAND_YRES (512)
 typedef struct
 {
-	char data[LAND_XRES*LAND_YRES];
+	whitgl_ivec size;
+	unsigned char data[LAND_XRES*LAND_YRES*3];
 } land;
 
 land land_zero();
