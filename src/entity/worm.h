@@ -11,9 +11,9 @@ typedef struct
 	whitgl_fvec segments[WORM_NUM_SEGMENTS];
 	whitgl_fvec speed;
 	whitgl_float dir;
-} worm;
-worm worm_zero(const land* land);
-worm worm_update(worm in, const land* land);
-void worm_draw(worm w);
+} ld29_worm;
+ld29_worm worm_zero(const ld29_land* land);
+ld29_worm worm_update(ld29_worm in, const ld29_land* land);
+void worm_draw(ld29_worm w);
 
 #endif // WORM_H

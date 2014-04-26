@@ -4,7 +4,7 @@
 
 #include <image.h>
 
-void land_zero(land* l)
+void land_zero(ld29_land* l)
 {
 	l->size.x = LAND_XRES;
 	l->size.y = LAND_YRES;
@@ -25,9 +25,9 @@ void land_zero(land* l)
 			l->data[i+1] = 0x1c;
 			l->data[i+2] = 0x28;
 		}
-	}	
+	}
 }
-void land_update(land* land)
+void land_update(ld29_land* land)
 {
 	int num_checks = 1024;
 	while(num_checks)
@@ -60,7 +60,7 @@ void land_update(land* land)
 		num_checks--;
 	}
 }
-void land_splat(land* land, whitgl_fcircle c)
+void land_splat(ld29_land* land, whitgl_fcircle c)
 {
 	whitgl_ivec center = whitgl_fvec_to_ivec(c.pos);
 	whitgl_iaabb bounds = whitgl_iaabb_zero;
@@ -87,10 +87,10 @@ void land_splat(land* land, whitgl_fcircle c)
 			land->data[index+1] = 0x28;
 			land->data[index+2] = 0x47;
 		}
-	}	
+	}
 }
 
-void land_draw(const land* land)
+void land_draw(const ld29_land* land)
 {
 	whitgl_sys_image_from_data(IMAGE_LAND, land->size, land->data);
 	whitgl_iaabb src = whitgl_iaabb_zero;
@@ -99,7 +99,7 @@ void land_draw(const land* land)
 	whitgl_sys_draw_tex_iaabb(IMAGE_LAND, src, dest);
 }
 
-bool land_filled(const land* land, whitgl_ivec p)
+bool land_filled(const ld29_land* land, whitgl_ivec p)
 {
 	if(p.x < 0 || p.x >= land->size.x)
 		return true;

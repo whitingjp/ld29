@@ -9,9 +9,9 @@ typedef struct
 {
 	whitgl_fvec pos;
 	whitgl_fvec speed;
-} egg;
-egg egg_zero(const land* land);
-egg egg_update(egg in, const land* land);
-void egg_draw(egg e);
+} ld29_egg;
+ld29_egg egg_zero(const ld29_land* land);
+ld29_egg egg_update(ld29_egg in, const ld29_land* land);
+void egg_draw(ld29_egg e);
 
 #endif // EGG_H

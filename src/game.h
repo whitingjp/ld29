@@ -10,16 +10,16 @@
 
 typedef struct
 {
-	worm w;
-	egg e;
-	land* l;
-	driller drill;
-} game;
+	ld29_worm w;
+	ld29_egg e;
+	ld29_land* l;
+	ld29_driller drill;
+} ld29_game;
 
-void game_init(game* g);
-void game_shutdown(game* g);
-void game_update(game* g);
-void game_do_damage(game* g, damage d);
-void game_draw(const game* g);
+void game_init(ld29_game* g);
+void game_shutdown(ld29_game* g);
+void game_update(ld29_game* g);
+void game_do_damage(ld29_game* g, ld29_damage d);
+void game_draw(const ld29_game* g);
 
 #endif // GAME_H

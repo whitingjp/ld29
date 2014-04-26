@@ -13,10 +13,10 @@ typedef struct
 	whitgl_fvec speed;
 	float drill_timer;
 	float beam_charge;
-	damage attack;
-} driller;
-driller driller_zero(whitgl_fvec pos);
-driller driller_update(driller in, const land* land, egg e);
-void driller_draw(driller e);
+	ld29_damage attack;
+} ld29_driller;
+ld29_driller driller_zero(whitgl_fvec pos);
+ld29_driller driller_update(ld29_driller in, const ld29_land* land, ld29_egg e);
+void driller_draw(ld29_driller e);
 
 #endif // DRILLER_H

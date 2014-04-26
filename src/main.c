@@ -10,7 +10,7 @@
 #include <game.h>
 #include <image.h>
 
-game g;
+ld29_game g;
 
 int main()
 {

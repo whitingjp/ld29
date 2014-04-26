@@ -4,9 +4,9 @@
 #include <whitgl/logging.h>
 #include <whitgl/sys.h>
 
-worm worm_zero(const land* land)
+ld29_worm worm_zero(const ld29_land* land)
 {
-	worm out;
+	ld29_worm out;
 	whitgl_fvec start = whitgl_fvec_zero;
 	start.x = land->size.x/2+50;
 	start.y = land->size.y;
@@ -17,9 +17,9 @@ worm worm_zero(const land* land)
 	out.dir = -whitgl_pi/2;
 	return out;
 }
-worm worm_update(worm in, const land* land)
+ld29_worm worm_update(ld29_worm in, const ld29_land* land)
 {
-	worm out;
+	ld29_worm out;
 	int i;
 	for(i=0; i<WORM_NUM_SEGMENTS-1; i++)
 		out.segments[i+1] = in.segments[i];
@@ -43,17 +43,17 @@ worm worm_update(worm in, const land* land)
 		out.dir = whitgl_fvec_to_angle(in.speed);
 	}
 
-	out.segments[0] = whitgl_fvec_add(in.segments[0], out.speed);	
+	out.segments[0] = whitgl_fvec_add(in.segments[0], out.speed);
 	return out;
 }
-void worm_draw(worm w)
+void worm_draw(ld29_worm worm)
 {
 	whitgl_sys_color color = {0xf4, 0xc2, 0xde, 0xff};
 	int i;
 	for(i=0; i<WORM_NUM_SEGMENTS; i++)
 	{
 		whitgl_fcircle c = whitgl_fcircle_zero;
-		c.pos = w.segments[i];
+		c.pos = worm.segments[i];
 		c.size = (whitgl_float)(WORM_NUM_SEGMENTS-i+12)/12;
 		if(i%4==0) c.size *= 1.25;
 		whitgl_sys_draw_fcircle(c, color, 16);

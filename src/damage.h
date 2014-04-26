@@ -7,13 +7,13 @@ typedef enum
 {
 	DAMAGE_NONE,
 	DAMAGE_SIDE,
-} damage_type;
+} ld29_damage_type;
 
 typedef struct
 {
-	damage_type type;
+	ld29_damage_type type;
 	whitgl_fvec pos;
-} damage;
-static const damage damage_zero = {DAMAGE_NONE, {0,0}};
+} ld29_damage;
+static const ld29_damage damage_zero = {DAMAGE_NONE, {0,0}};
 
 #endif // DAMAGE_H

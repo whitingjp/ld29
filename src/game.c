@@ -2,21 +2,21 @@
 
 #include <stdlib.h>
 
-void game_init(game* g)
+void game_init(ld29_game* g)
 {
-	g->l = malloc(sizeof(land));
+	g->l = malloc(sizeof(ld29_land));
 	land_zero(g->l);
 	g->w = worm_zero(g->l);
 	g->e = egg_zero(g->l);
 	whitgl_fvec drill_pos = {g->l->size.x/2-25, 0};
 	g->drill = driller_zero(drill_pos);
 }
-void game_shutdown(game* g)
+void game_shutdown(ld29_game* g)
 {
 	free(g->l);
 	free(g);
 }
-void game_update(game* g)
+void game_update(ld29_game* g)
 {
 	land_update(g->l);
 	g->w = worm_update(g->w, g->l);
@@ -36,12 +36,12 @@ void game_update(game* g)
 	splat.size = 5;
 	land_splat(g->l, splat);
 }
-void game_do_damage(game* g, damage d)
+void game_do_damage(ld29_game* g, ld29_damage d)
 {
 	(void)g;
 	(void)d;
 }
-void game_draw(const game* g)
+void game_draw(const ld29_game* g)
 {
 	land_draw(g->l);
 	worm_draw(g->w);
