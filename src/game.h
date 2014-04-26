@@ -1,6 +1,7 @@
 #ifndef GAME_H
 #define GAME_H
 
+#include <entity/driller.h>
 #include <entity/egg.h>
 #include <entity/land.h>
 #include <entity/worm.h>
@@ -10,6 +11,7 @@ typedef struct
 	worm w;
 	egg e;
 	land* l;
+	driller drill;
 } game;
 
 void game_init(game* g);
