@@ -61,3 +61,13 @@ void land_draw(const land* land)
 	whitgl_iaabb dest = src;
 	whitgl_sys_draw_tex_iaabb(4, src, dest);
 }
+
+bool land_filled(const land* land, whitgl_ivec p)
+{
+	if(p.x < 0 || p.x >= land->size.x)
+		return true;
+	if(p.y < 0 || p.y >= land->size.y)
+		return true;
+	int index = (p.x+p.y*land->size.x)*3;
+	return land->data[index] == 0xb5;
+}

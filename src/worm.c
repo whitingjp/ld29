@@ -1,6 +1,7 @@
 #include "worm.h"
 
 #include <whitgl/input.h>
+#include <whitgl/logging.h>
 #include <whitgl/sys.h>
 
 worm worm_zero()
@@ -12,13 +13,14 @@ worm worm_zero()
 	out.dir = 0;
 	return out;
 }
-worm worm_update(worm in)
+worm worm_update(worm in, const land* land)
 {
 	worm out;
 	int i;
 	for(i=0; i<WORM_NUM_SEGMENTS-1; i++)
 		out.segments[i+1] = in.segments[i];
 
+	WHITGL_LOG("landfilled: %d", land_filled(land, whitgl_fvec_to_ivec(in.segments[0])));
 	whitgl_float dir_speed = 0.2;
 	out.dir = in.dir;
 	if(whitgl_input_down(WHITGL_INPUT_LEFT))

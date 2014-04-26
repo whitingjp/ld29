@@ -50,9 +50,9 @@ int main()
 		//WHITGL_LOG("fps: %f", 1.0/(now-then));
 		while(update_time > 0)
 		{
-			w = worm_update(w);
+			w = worm_update(w, l);
 			whitgl_fcircle splat = whitgl_fcircle_zero;
-			splat.pos = w.segments[0];
+			splat.pos = w.segments[3]; // can't do 0 because it mucks up land_filled
 			splat.size = 80;
 			land_splat(l, splat);
 			update_time -= 1.0/60.0;
