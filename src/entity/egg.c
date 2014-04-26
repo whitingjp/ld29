@@ -12,11 +12,14 @@ ld29_egg egg_zero(const ld29_land* land)
 	start.y = land->size.y-150;
 	out.pos = start;
 	out.speed = whitgl_fvec_zero;
+	out.dead = false;
 	return out;
 }
 ld29_egg egg_update(ld29_egg in, const ld29_land* land)
 {
-	ld29_egg out;
+	if(in.dead)
+		return in;
+	ld29_egg out = egg_zero(land);
 	bool filled = land_filled(land, whitgl_fvec_to_ivec(in.pos));
 	out.speed = in.speed;
 	if(filled)
@@ -32,6 +35,8 @@ ld29_egg egg_update(ld29_egg in, const ld29_land* land)
 }
 void egg_draw(ld29_egg egg)
 {
+	if(egg.dead)
+		return;
 	whitgl_sprite sprite = whitgl_sprite_zero;
 	sprite.image = IMAGE_SPRITES;
 	sprite.size.x = 32; sprite.size.y = 32;

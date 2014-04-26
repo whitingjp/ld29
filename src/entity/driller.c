@@ -26,7 +26,7 @@ ld29_driller driller_update(ld29_driller in, const ld29_land* land, ld29_egg e)
 	bool filled = land_filled(land, whitgl_ivec_add(whitgl_fvec_to_ivec(in.pos), offset));
 	if(!filled)
 		out.speed.y = in.speed.y + 0.05;
-	else if(out.pos.y < e.pos.y && in.beam_charge == 0)
+	else if(e.dead || (out.pos.y < e.pos.y && in.beam_charge == 0))
 		out.speed.y = 0.5;
 	else
 		out.beam_charge = in.beam_charge + 2.0/60.0;

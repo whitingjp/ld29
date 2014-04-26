@@ -78,7 +78,7 @@ void land_splat(ld29_land* land, whitgl_fcircle c)
 			int index = (pos.x+pos.y*land->size.x)*3;
 			if(index < 0 || index >= land->size.x*land->size.y*3)
 				continue;
-			whitgl_float sqmag = whitgl_ivec_sqmagnitude(whitgl_ivec_sub(center, pos));
+			whitgl_int sqmag = whitgl_ivec_sqmagnitude(whitgl_ivec_sub(center, pos));
 			if(sqmag > c.size)
 				continue;
 			if(land->data[index] == 0x5a)

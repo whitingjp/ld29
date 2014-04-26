@@ -116,7 +116,7 @@ whitgl_fvec whitgl_fvec_divide(whitgl_fvec a, whitgl_fvec s)
 	out.y = a.y / s.y;
 	return out;
 }
-whitgl_float whitgl_fvec_sqmagnitude(whitgl_ivec a)
+whitgl_float whitgl_fvec_sqmagnitude(whitgl_fvec a)
 {
 	whitgl_float out = a.x*a.x + a.y*a.y;
 	return out;
