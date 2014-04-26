@@ -9,6 +9,7 @@
 typedef struct
 {
 	whitgl_fvec segments[WORM_NUM_SEGMENTS];
+	whitgl_fvec speed;
 	whitgl_float dir;
 } worm;
 worm worm_zero();

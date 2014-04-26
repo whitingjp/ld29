@@ -257,3 +257,7 @@ whitgl_fvec whitgl_angle_to_fvec(whitgl_float in)
 	out.y = sin(in);
 	return out;
 }
+whitgl_float whitgl_fvec_to_angle(whitgl_fvec in)
+{
+	return atan2(in.y, in.x);
+}

@@ -8,8 +8,11 @@ worm worm_zero()
 {
 	worm out;
 	int i;
+	whitgl_fvec start = whitgl_fvec_zero;
+	start.x = 256;
 	for(i=0; i<WORM_NUM_SEGMENTS; i++)
-		out.segments[i] = whitgl_fvec_zero;
+		out.segments[i] = start;
+	out.speed = whitgl_fvec_zero;
 	out.dir = 0;
 	return out;
 }
@@ -20,18 +23,26 @@ worm worm_update(worm in, const land* land)
 	for(i=0; i<WORM_NUM_SEGMENTS-1; i++)
 		out.segments[i+1] = in.segments[i];
 
-	WHITGL_LOG("landfilled: %d", land_filled(land, whitgl_fvec_to_ivec(in.segments[0])));
-	whitgl_float dir_speed = 0.2;
-	out.dir = in.dir;
-	if(whitgl_input_down(WHITGL_INPUT_LEFT))
-		out.dir -= dir_speed;
-	if(whitgl_input_down(WHITGL_INPUT_RIGHT))
-		out.dir += dir_speed;
+	bool filled = land_filled(land, whitgl_fvec_to_ivec(in.segments[0]));
+	if(filled)
+	{
+		whitgl_float dir_speed = 0.2;
+		out.dir = in.dir;
+		if(whitgl_input_down(WHITGL_INPUT_LEFT))
+			out.dir -= dir_speed;
+		if(whitgl_input_down(WHITGL_INPUT_RIGHT))
+			out.dir += dir_speed;
+		whitgl_float speed = 4;
+		whitgl_fvec speed_scale = {speed, speed};
+		out.speed = whitgl_fvec_scale(whitgl_angle_to_fvec(out.dir), speed_scale);
+	} else
+	{
+		out.speed.x = in.speed.x;
+		out.speed.y = in.speed.y+0.1;
+		out.dir = whitgl_fvec_to_angle(in.speed);
+	}
 
-	whitgl_float speed = 4;
-	whitgl_fvec speed_scale = {speed, speed};
-	whitgl_fvec dir_vec = whitgl_fvec_scale(whitgl_angle_to_fvec(out.dir), speed_scale);
-	out.segments[0] = whitgl_fvec_add(in.segments[0], dir_vec);	
+	out.segments[0] = whitgl_fvec_add(in.segments[0], out.speed);	
 	return out;
 }
 void worm_draw(worm w)

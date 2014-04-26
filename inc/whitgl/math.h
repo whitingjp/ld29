@@ -83,6 +83,7 @@ whitgl_faabb whitgl_iaabb_to_faabb(whitgl_iaabb in);
 whitgl_iaabb whitgl_faabb_to_iaabb(whitgl_faabb in);
 
 whitgl_fvec whitgl_angle_to_fvec(whitgl_float in);
+whitgl_float whitgl_fvec_to_angle(whitgl_fvec in);
 
 static const whitgl_float whitgl_pi = 3.14159;
 
