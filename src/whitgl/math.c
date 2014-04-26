@@ -153,6 +153,15 @@ whitgl_iaabb whitgl_iaabb_divide(whitgl_iaabb a, whitgl_ivec s)
 	out.b = whitgl_ivec_divide(a.b, s);
 	return out;
 }
+whitgl_iaabb whitgl_iaabb_intersection(whitgl_iaabb a, whitgl_iaabb b)
+{
+	whitgl_iaabb out;
+	out.a.x = whitgl_imax(whitgl_imin(a.a.x, a.b.x), whitgl_imin(b.a.x, b.b.x));
+	out.a.y = whitgl_imax(whitgl_imin(a.a.y, a.b.y), whitgl_imin(b.a.y, b.b.y));
+	out.b.x = whitgl_imin(whitgl_imax(a.a.x, a.b.x), whitgl_imax(b.a.x, b.b.x));
+	out.b.y = whitgl_imin(whitgl_imax(a.a.y, a.b.y), whitgl_imax(b.a.y, b.b.y));
+	return out;
+}
 bool whitgl_iaabb_intersects(whitgl_iaabb a, whitgl_iaabb b)
 {
 	if(a.a.x >= b.b.x) return false;
@@ -192,6 +201,15 @@ whitgl_faabb whitgl_faabb_divide(whitgl_faabb a, whitgl_fvec s)
 	whitgl_faabb out;
 	out.a = whitgl_fvec_divide(a.a, s);
 	out.b = whitgl_fvec_divide(a.b, s);
+	return out;
+}
+whitgl_faabb whitgl_faabb_intersection(whitgl_faabb a, whitgl_faabb b)
+{
+	whitgl_faabb out;
+	out.a.x = whitgl_fmax(whitgl_fmin(a.a.x, a.b.x), whitgl_fmin(b.a.x, b.b.x));
+	out.a.y = whitgl_fmax(whitgl_fmin(a.a.y, a.b.y), whitgl_fmin(b.a.y, b.b.y));
+	out.b.x = whitgl_fmin(whitgl_fmax(a.a.x, a.b.x), whitgl_fmax(b.a.x, b.b.x));
+	out.b.y = whitgl_fmin(whitgl_fmax(a.a.y, a.b.y), whitgl_fmax(b.a.y, b.b.y));
 	return out;
 }
 bool whitgl_faabb_intersects(whitgl_faabb a, whitgl_faabb b)
