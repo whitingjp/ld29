@@ -35,13 +35,26 @@ void land_update(land* land)
 		pos.x = whitgl_randint(land->size.x);
 		pos.y = whitgl_randint(land->size.y-1);
 		whitgl_ivec under_pos = pos;
+		under_pos.x += whitgl_randint(3)-1;
 		under_pos.y++;
-		if(!land_filled(land, pos) && land_filled(land, under_pos))
+		if(land_filled(land, under_pos))
 		{
 			int index = (pos.x+pos.y*land->size.x)*3;
-			land->data[index] = 0xb5;
-			land->data[index+1] = 0x1d;
-			land->data[index+2] = 0x3d;
+			if(land->data[index] == 0x63)
+			{
+				land->data[index] = 0xb5;
+				land->data[index+1] = 0x1d;
+				land->data[index+2] = 0x3d;
+			}
+		} else if(whitgl_randint(4) == 1)
+		{
+			int index = (pos.x+pos.y*land->size.x)*3;
+			if(land->data[index] == 0xb5)
+			{
+				land->data[index] = 0x63;
+				land->data[index+1] = 0x28;
+				land->data[index+2] = 0x47;
+			}
 		}
 		num_checks--;
 	}
