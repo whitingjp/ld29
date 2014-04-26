@@ -1,1 +1,1 @@
-C + opengl game framework/library focussed on gamejams + prototypes.
+Jonathan Whitings entry into Ludum Dare 29
