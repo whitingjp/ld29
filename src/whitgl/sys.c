@@ -396,6 +396,46 @@ void whitgl_sys_draw_iaabb(whitgl_iaabb rect, whitgl_sys_color col)
 	glDrawArrays( GL_TRIANGLES, 0, 6 );
 }
 
+void whitgl_sys_draw_fcircle(whitgl_fcircle c, whitgl_sys_color col, int tris)
+{
+	int num_vertices = tris*3*2;
+	whitgl_fvec scale = {c.size, c.size};
+	float *vertices = malloc(sizeof(float)*num_vertices);
+	int i;
+	for(i=0; i<tris; i++)
+	{
+		whitgl_float dir;
+		whitgl_fvec off;
+		int vertex_offset = 6*i;
+		vertices[vertex_offset+0] = c.pos.x; vertices[vertex_offset+1] = c.pos.y;
+
+		dir = ((whitgl_float)i)/tris * whitgl_pi * 2 ;
+		off = whitgl_fvec_scale(whitgl_angle_to_fvec(dir), scale);
+		vertices[vertex_offset+2] = c.pos.x+off.x; vertices[vertex_offset+3] = c.pos.y+off.y;
+
+		dir = ((whitgl_float)(i+1))/tris * whitgl_pi * 2;
+		off = whitgl_fvec_scale(whitgl_angle_to_fvec(dir), scale);
+		vertices[vertex_offset+4] = c.pos.x+off.x; vertices[vertex_offset+5] = c.pos.y+off.y;
+	}
+
+	glBindBuffer( GL_ARRAY_BUFFER, vbo );
+	glBufferData( GL_ARRAY_BUFFER, sizeof(float)*num_vertices , vertices, GL_DYNAMIC_DRAW );
+
+	GLuint shaderProgram = shaders[WHITGL_SHADER_FLAT].program;
+	glUseProgram( shaderProgram );
+	glUniform4f( glGetUniformLocation( shaderProgram, "sColor" ), (float)col.r/255.0, (float)col.g/255.0, (float)col.b/255.0, (float)col.a/255.0 );
+	_whitgl_load_uniforms(WHITGL_SHADER_FLAT);
+	_whitgl_sys_orthographic(shaderProgram, 0, _setup.size.x, 0, _setup.size.y);
+
+	#define BUFFER_OFFSET(i) ((void*)(i))
+	GLint posAttrib = glGetAttribLocation( shaderProgram, "position" );
+	glVertexAttribPointer( posAttrib, 2, GL_FLOAT, GL_FALSE, 2*sizeof(float), 0 );
+	glEnableVertexAttribArray( posAttrib );
+
+	glDrawArrays( GL_TRIANGLES, 0, tris*3 );
+	free(vertices);
+}
+
 void whitgl_sys_draw_tex_iaabb(int id, whitgl_iaabb src, whitgl_iaabb dest)
 {
 	int index = -1;

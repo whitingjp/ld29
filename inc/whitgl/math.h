@@ -30,6 +30,13 @@ typedef struct
 } whitgl_faabb;
 static const whitgl_faabb whitgl_faabb_zero = { {0,0}, {0,0} };
 
+typedef struct
+{
+	whitgl_fvec pos;
+	whitgl_float size;
+} whitgl_fcircle;
+static const whitgl_fcircle whitgl_fcircle_zero = { {0,0}, 0};
+
 whitgl_int whitgl_imin(whitgl_int a, whitgl_int b);
 whitgl_int whitgl_imax(whitgl_int a, whitgl_int b);
 whitgl_int whitgl_iminmax(whitgl_int lower, whitgl_int upper, whitgl_int n);
@@ -74,5 +81,7 @@ whitgl_faabb whitgl_iaabb_to_faabb(whitgl_iaabb in);
 whitgl_iaabb whitgl_faabb_to_iaabb(whitgl_faabb in);
 
 whitgl_fvec whitgl_angle_to_fvec(whitgl_float in);
+
+static const whitgl_float whitgl_pi = 3.14159;
 
 #endif // WHITGL_MATH_H_
