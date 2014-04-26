@@ -39,6 +39,10 @@ whitgl_float whitgl_fminmax(whitgl_float lower, whitgl_float upper, whitgl_float
 	if(n > upper) return upper;
 	return n;
 }
+whitgl_float whitgl_sqrt(whitgl_float a)
+{
+	return sqrt(a);
+}
 
 whitgl_ivec whitgl_ivec_add(whitgl_ivec a, whitgl_ivec b)
 {

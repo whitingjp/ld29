@@ -44,6 +44,7 @@ whitgl_int whitgl_iminmax(whitgl_int lower, whitgl_int upper, whitgl_int n);
 whitgl_float whitgl_fmin(whitgl_float a, whitgl_float b);
 whitgl_float whitgl_fmax(whitgl_float a, whitgl_float b);
 whitgl_float whitgl_fminmax(whitgl_float lower, whitgl_float upper, whitgl_float n);
+whitgl_float whitgl_sqrt(whitgl_float a);
 
 whitgl_ivec whitgl_ivec_add(whitgl_ivec a, whitgl_ivec b);
 whitgl_ivec whitgl_ivec_sub(whitgl_ivec a, whitgl_ivec b);
