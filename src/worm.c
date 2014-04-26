@@ -41,7 +41,8 @@ void worm_draw(worm w)
 	{
 		whitgl_fcircle c = whitgl_fcircle_zero;
 		c.pos = w.segments[i];
-		c.size = WORM_NUM_SEGMENTS-i/2;
+		c.size = (whitgl_float)(WORM_NUM_SEGMENTS-i+12)/6;
+		if(i%4==0) c.size *= 1.25;
 		whitgl_sys_draw_fcircle(c, color, 16);
 	}
 }

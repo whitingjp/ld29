@@ -14,6 +14,9 @@ int main()
 
 	whitgl_sys_setup setup = whitgl_default_setup;
 	setup.name = "LD29";
+	setup.size.x = 400;
+	setup.size.y = 300;
+	setup.pixel_size = 3;
 
 	worm w = worm_zero();
 

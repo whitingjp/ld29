@@ -3,7 +3,7 @@
 
 #include <whitgl/math.h>
 
-#define WORM_NUM_SEGMENTS (12)
+#define WORM_NUM_SEGMENTS (48)
 typedef struct
 {
 	whitgl_fvec segments[WORM_NUM_SEGMENTS];
