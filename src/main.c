@@ -6,6 +6,7 @@
 #include <whitgl/math.h>
 #include <whitgl/sound.h>
 #include <whitgl/sys.h>
+#include <worm.h>
 
 int main()
 {
@@ -13,6 +14,8 @@ int main()
 
 	whitgl_sys_setup setup = whitgl_default_setup;
 	setup.name = "LD29";
+
+	worm w = worm_zero();
 
 	if(!whitgl_sys_init(setup))
 		return 1;
@@ -27,6 +30,7 @@ int main()
 		whitgl_input_update();
 
 		whitgl_sys_draw_init();
+		worm_draw(w);
 		whitgl_sys_draw_finish();
 
 		if(whitgl_input_pressed(WHITGL_INPUT_ESC))

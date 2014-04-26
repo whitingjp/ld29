@@ -29,7 +29,7 @@ data_out = joinp(outdir, 'data')
 targets = []
 
 cflags = ''
-cflags += '-Iinc'
+cflags += '-Iinc -Isrc'
 cflags += ' -Wall -Wextra -Werror'
 cflags += ' -g'
 

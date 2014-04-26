@@ -1,6 +1,9 @@
 #ifndef WHITGL_SYS_H_
 #define WHITGL_SYS_H_
 
+#include <stdbool.h>
+#include <stddef.h>
+
 #include <whitgl/math.h>
 
 typedef struct
