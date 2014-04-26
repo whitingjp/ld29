@@ -1,0 +1,20 @@
+Movement types:
+ * Drill straight down.
+ * 'Blowtorch' in changing direction.
+ * Fly above surface.
+ * Ignores land entirely, slow, rethinks positioning.
+ * Parachute in, walk around.
+
+Attacks:
+ * Side 'ray', triggered when egg height reached.
+ * Big bomb, triggered by passing through enough air.
+ * Launch different enemy/s.
+ * Small bomb, only triggered when reaching egg.
+
+
+
+Plane - drops paratroopers.
+Paratrooper - launch real threat shortly after landing, then walking around, after a recharge time can launch another threat.
+Side driller - drills down fairly quickly, when it hits egg level it charges up (now invincible?) and lasts sideways, can eat enroute, or block blast with body as last ditch attempt.
+Big bertha - explodes if near worm, drops through earth *slowly*, but detonates if hitting earth after moving through too much air (unstable).
+Drone - darts around erratically, but not quickly, semi-cloaked and inedible when moving, pauses and 'wakes up' to choose next direction.  If it reaches the egg, *pop*.
