@@ -20,6 +20,6 @@ void game_init(ld29_game* g);
 void game_shutdown(ld29_game* g);
 void game_update(ld29_game* g);
 void game_do_damage(ld29_game* g, ld29_damage d);
-void game_draw(const ld29_game* g);
+void game_draw(const ld29_game* g, whitgl_ivec screen_size);
 
 #endif // GAME_H
