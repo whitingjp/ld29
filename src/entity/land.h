@@ -14,7 +14,7 @@ typedef struct
 void land_zero(ld29_land* land);
 void land_update(ld29_land* land);
 void land_splat(ld29_land* land, whitgl_fcircle c);
-void land_draw(const ld29_land* land);
+void land_draw(const ld29_land* land, whitgl_ivec camera);
 bool land_filled(const ld29_land* land, whitgl_ivec p);
 
 #endif // LAND_H

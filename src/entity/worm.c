@@ -46,14 +46,14 @@ ld29_worm worm_update(ld29_worm in, const ld29_land* land)
 	out.segments[0] = whitgl_fvec_add(in.segments[0], out.speed);
 	return out;
 }
-void worm_draw(ld29_worm worm)
+void worm_draw(ld29_worm worm, whitgl_ivec camera)
 {
 	whitgl_sys_color color = {0xf4, 0xc2, 0xde, 0xff};
 	int i;
 	for(i=0; i<WORM_NUM_SEGMENTS; i++)
 	{
 		whitgl_fcircle c = whitgl_fcircle_zero;
-		c.pos = worm.segments[i];
+		c.pos = whitgl_fvec_add(worm.segments[i], whitgl_ivec_to_fvec(camera));
 		c.size = (whitgl_float)(WORM_NUM_SEGMENTS-i+12)/12;
 		if(i%4==0) c.size *= 1.25;
 		whitgl_sys_draw_fcircle(c, color, 16);

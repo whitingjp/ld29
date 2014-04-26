@@ -90,12 +90,14 @@ void land_splat(ld29_land* land, whitgl_fcircle c)
 	}
 }
 
-void land_draw(const ld29_land* land)
+void land_draw(const ld29_land* land, whitgl_ivec camera)
 {
 	whitgl_sys_image_from_data(IMAGE_LAND, land->size, land->data);
 	whitgl_iaabb src = whitgl_iaabb_zero;
 	src.b = land->size;
-	whitgl_iaabb dest = src;
+	whitgl_iaabb dest = whitgl_iaabb_zero;
+	dest.a = camera;
+	dest.b = whitgl_ivec_add(camera, land->size);
 	whitgl_sys_draw_tex_iaabb(IMAGE_LAND, src, dest);
 }
 

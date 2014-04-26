@@ -33,7 +33,7 @@ ld29_egg egg_update(ld29_egg in, const ld29_land* land)
 	}
 	return out;
 }
-void egg_draw(ld29_egg egg)
+void egg_draw(ld29_egg egg, whitgl_ivec camera)
 {
 	if(egg.dead)
 		return;
@@ -43,5 +43,6 @@ void egg_draw(ld29_egg egg)
 	whitgl_ivec frame = whitgl_ivec_zero;
 	whitgl_ivec offset = {-16, -16};
 	whitgl_ivec draw_pos = whitgl_ivec_add( whitgl_fvec_to_ivec(egg.pos), offset);
+	draw_pos = whitgl_ivec_add(draw_pos, camera);
 	whitgl_sys_draw_sprite(sprite, frame, draw_pos);
 }

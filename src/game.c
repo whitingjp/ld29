@@ -62,8 +62,11 @@ void game_do_damage(ld29_game* g, ld29_damage damage)
 }
 void game_draw(const ld29_game* g)
 {
-	land_draw(g->land);
-	worm_draw(g->worm);
-	egg_draw(g->egg);
-	driller_draw(g->drill);
+	whitgl_ivec camera = whitgl_ivec_inverse(whitgl_fvec_to_ivec(g->worm.segments[0]));
+	camera.x += 256;
+	camera.y += 256;
+	land_draw(g->land, camera);
+	worm_draw(g->worm, camera);
+	egg_draw(g->egg, camera);
+	driller_draw(g->drill, camera);
 }

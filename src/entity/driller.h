@@ -17,6 +17,6 @@ typedef struct
 } ld29_driller;
 ld29_driller driller_zero(whitgl_fvec pos);
 ld29_driller driller_update(ld29_driller in, const ld29_land* land, ld29_egg e);
-void driller_draw(ld29_driller e);
+void driller_draw(ld29_driller e, whitgl_ivec camera);
 
 #endif // DRILLER_H
