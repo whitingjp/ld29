@@ -2,6 +2,8 @@
 
 #include <whitgl/sys.h>
 
+#include <image.h>
+
 egg egg_zero(const land* land)
 {
 	egg out;
@@ -30,9 +32,11 @@ egg egg_update(egg in, const land* land)
 }
 void egg_draw(egg e)
 {
-	whitgl_sys_color color = {0xf4, 0xc2, 0xde, 0xff};
-	whitgl_fcircle c = whitgl_fcircle_zero;
-	c.pos = e.pos;
-	c.size = 10;
-	whitgl_sys_draw_fcircle(c, color, 16);
+	whitgl_sprite sprite = whitgl_sprite_zero;
+	sprite.image = IMAGE_SPRITES;
+	sprite.size.x = 32; sprite.size.y = 32;
+	whitgl_ivec frame = whitgl_ivec_zero;
+	whitgl_ivec offset = {-16, -16};
+	whitgl_ivec draw_pos = whitgl_ivec_add( whitgl_fvec_to_ivec(e.pos), offset);
+	whitgl_sys_draw_sprite(sprite, frame, draw_pos);
 }

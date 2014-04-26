@@ -8,6 +8,7 @@
 #include <whitgl/sys.h>
 
 #include <game.h>
+#include <image.h>
 
 game g;
 
@@ -23,6 +24,8 @@ int main()
 
 	if(!whitgl_sys_init(setup))
 		return 1;
+
+	whitgl_sys_add_image(IMAGE_SPRITES, "data/sprites.png");
 
 	game_init(&g);
 
