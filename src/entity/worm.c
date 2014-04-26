@@ -66,12 +66,13 @@ ld29_worm worm_update(ld29_worm in, const ld29_land* land)
 	{
 		out.boost = in.boost;
 		out.boost_dir = in.boost_dir;
-		out.speed.x = in.speed.x;
-		out.speed.y = in.speed.y+0.05;
+		out.speed.x = in.speed.x*0.995;
+		out.speed.y = in.speed.y+0.07;
 		out.dir = whitgl_fvec_to_angle(in.speed);
 	}
 
 	out.segments[0] = whitgl_fvec_add(in.segments[0], out.speed);
+	out.segments[0].x = whitgl_float_wrap(out.segments[0].x, 0, land->size.x);
 	return out;
 }
 void worm_draw(ld29_worm worm, whitgl_ivec camera)

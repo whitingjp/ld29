@@ -105,7 +105,9 @@ bool land_filled(const ld29_land* land, whitgl_ivec p)
 {
 	if(p.x < 0 || p.x >= land->size.x)
 		return true;
-	if(p.y < 0 || p.y >= land->size.y)
+	if(p.y < 0)
+		return false;
+	if(p.y >= land->size.y)
 		return true;
 	int index = (p.x+p.y*land->size.x)*3;
 	return land->data[index] == 0xb5;

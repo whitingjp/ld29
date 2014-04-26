@@ -90,6 +90,8 @@ void whitgl_randseed(whitgl_int seed);
 whitgl_int whitgl_randint(whitgl_int size);
 whitgl_float whitgl_randfloat();
 
+whitgl_float whitgl_float_wrap(whitgl_float a, whitgl_float min, whitgl_float max);
+
 static const whitgl_float whitgl_pi = 3.14159;
 
 #endif // WHITGL_MATH_H_

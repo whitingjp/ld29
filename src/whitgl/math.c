@@ -297,3 +297,13 @@ whitgl_float whitgl_randfloat()
 {
 	return rand() / (whitgl_float)RAND_MAX;
 }
+
+whitgl_float whitgl_float_wrap(whitgl_float a, whitgl_float min, whitgl_float max)
+{
+	float size = max-min;
+	while(a <= min)
+		a += size;
+	while(a > max)
+		a -= size;
+	return a;
+}
