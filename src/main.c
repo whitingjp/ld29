@@ -6,6 +6,8 @@
 #include <whitgl/math.h>
 #include <whitgl/sound.h>
 #include <whitgl/sys.h>
+
+#include <land.h>
 #include <worm.h>
 
 int main()
@@ -14,11 +16,12 @@ int main()
 
 	whitgl_sys_setup setup = whitgl_default_setup;
 	setup.name = "LD29";
-	setup.size.x = 400;
-	setup.size.y = 300;
-	setup.pixel_size = 3;
+	setup.size.x = 512;
+	setup.size.y = 512;
+	setup.pixel_size = 2;
 
 	worm w = worm_zero();
+	land l = land_zero();
 
 	if(!whitgl_sys_init(setup))
 		return 1;
@@ -47,6 +50,7 @@ int main()
 
 		whitgl_sys_draw_init();
 		worm_draw(w);
+		land_draw(&l);
 		whitgl_sys_draw_finish();
 
 		if(whitgl_input_pressed(WHITGL_INPUT_ESC))

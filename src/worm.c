@@ -1,7 +1,6 @@
 #include "worm.h"
 
 #include <whitgl/input.h>
-#include <whitgl/logging.h>
 #include <whitgl/sys.h>
 
 worm worm_zero()
