@@ -23,13 +23,12 @@ int main()
 	setup.size.y = 512;
 	setup.pixel_size = 2;
 
-	worm w = worm_zero();
-
 	if(!whitgl_sys_init(setup))
 		return 1;
 
 	l = malloc(sizeof(land));
 	land_zero(l);
+	worm w = worm_zero(l);
 
 	whitgl_sound_init();
 	whitgl_input_init();

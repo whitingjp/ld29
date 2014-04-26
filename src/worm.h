@@ -12,7 +12,7 @@ typedef struct
 	whitgl_fvec speed;
 	whitgl_float dir;
 } worm;
-worm worm_zero();
+worm worm_zero(const land* land);
 worm worm_update(worm in, const land* land);
 void worm_draw(worm w);
 

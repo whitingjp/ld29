@@ -4,16 +4,17 @@
 #include <whitgl/logging.h>
 #include <whitgl/sys.h>
 
-worm worm_zero()
+worm worm_zero(const land* land)
 {
 	worm out;
 	int i;
 	whitgl_fvec start = whitgl_fvec_zero;
-	start.x = 128;
+	start.x = land->size.x/2;
+	start.y = land->size.y;
 	for(i=0; i<WORM_NUM_SEGMENTS; i++)
 		out.segments[i] = start;
 	out.speed = whitgl_fvec_zero;
-	out.dir = 0;
+	out.dir = -whitgl_pi/2;
 	return out;
 }
 worm worm_update(worm in, const land* land)
