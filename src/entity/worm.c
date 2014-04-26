@@ -26,8 +26,7 @@ ld29_worm worm_update(ld29_worm in, const ld29_land* land)
 	for(i=0; i<WORM_NUM_SEGMENTS-1; i++)
 		out.segments[i+1] = in.segments[i];
 
-	bool filled = land_filled(land, whitgl_fvec_to_ivec(in.segments[0]));
-	if(filled)
+	if(land_get(land, whitgl_fvec_to_ivec(in.segments[0])) == LAND_GROUND)
 	{
 		whitgl_float dir_speed = 0.15;
 		whitgl_float boost_dir_speed = 0.03;
@@ -72,7 +71,7 @@ ld29_worm worm_update(ld29_worm in, const ld29_land* land)
 	}
 
 	out.segments[0] = whitgl_fvec_add(in.segments[0], out.speed);
-	out.segments[0].x = whitgl_float_wrap(out.segments[0].x, 0, land->size.x);
+	out.segments[0].x = whitgl_fwrap(out.segments[0].x, 0, land->size.x);
 	return out;
 }
 void worm_draw(ld29_worm worm, whitgl_ivec camera)

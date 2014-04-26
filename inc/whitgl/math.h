@@ -40,11 +40,13 @@ static const whitgl_fcircle whitgl_fcircle_zero = { {0,0}, 0};
 whitgl_int whitgl_imin(whitgl_int a, whitgl_int b);
 whitgl_int whitgl_imax(whitgl_int a, whitgl_int b);
 whitgl_int whitgl_iminmax(whitgl_int lower, whitgl_int upper, whitgl_int n);
+whitgl_int whitgl_iwrap(whitgl_int a, whitgl_int min, whitgl_int max);
 
 whitgl_float whitgl_fmin(whitgl_float a, whitgl_float b);
 whitgl_float whitgl_fmax(whitgl_float a, whitgl_float b);
 whitgl_float whitgl_fminmax(whitgl_float lower, whitgl_float upper, whitgl_float n);
 whitgl_float whitgl_sqrt(whitgl_float a);
+whitgl_float whitgl_fwrap(whitgl_float a, whitgl_float min, whitgl_float max);
 
 whitgl_ivec whitgl_ivec_add(whitgl_ivec a, whitgl_ivec b);
 whitgl_ivec whitgl_ivec_sub(whitgl_ivec a, whitgl_ivec b);
@@ -89,8 +91,6 @@ whitgl_float whitgl_fvec_to_angle(whitgl_fvec in);
 void whitgl_randseed(whitgl_int seed);
 whitgl_int whitgl_randint(whitgl_int size);
 whitgl_float whitgl_randfloat();
-
-whitgl_float whitgl_float_wrap(whitgl_float a, whitgl_float min, whitgl_float max);
 
 static const whitgl_float whitgl_pi = 3.14159;
 

@@ -21,6 +21,15 @@ whitgl_int whitgl_iminmax(whitgl_int lower, whitgl_int upper, whitgl_int n)
 	if(n > upper) return upper;
 	return n;
 }
+whitgl_int whitgl_iwrap(whitgl_int a, whitgl_int min, whitgl_int max)
+{
+	float size = max-min;
+	while(a <= min)
+		a += size;
+	while(a > max)
+		a -= size;
+	return a;
+}
 
 whitgl_float whitgl_fmin(whitgl_float a, whitgl_float b)
 {
@@ -42,6 +51,15 @@ whitgl_float whitgl_fminmax(whitgl_float lower, whitgl_float upper, whitgl_float
 whitgl_float whitgl_sqrt(whitgl_float a)
 {
 	return sqrt(a);
+}
+whitgl_float whitgl_fwrap(whitgl_float a, whitgl_float min, whitgl_float max)
+{
+	float size = max-min;
+	while(a <= min)
+		a += size;
+	while(a > max)
+		a -= size;
+	return a;
 }
 
 whitgl_ivec whitgl_ivec_add(whitgl_ivec a, whitgl_ivec b)
@@ -296,14 +314,4 @@ whitgl_int whitgl_randint(whitgl_int size)
 whitgl_float whitgl_randfloat()
 {
 	return rand() / (whitgl_float)RAND_MAX;
-}
-
-whitgl_float whitgl_float_wrap(whitgl_float a, whitgl_float min, whitgl_float max)
-{
-	float size = max-min;
-	while(a <= min)
-		a += size;
-	while(a > max)
-		a -= size;
-	return a;
 }

@@ -1,29 +1,63 @@
 #include "land.h"
 
+#include <whitgl/logging.h>
 #include <whitgl/sys.h>
 
 #include <image.h>
 
-void land_zero(ld29_land* l)
+static const whitgl_sys_color land_colors[LAND_MAX] =
 {
-	l->size.x = LAND_XRES;
-	l->size.y = LAND_YRES;
+	{0x5a, 0x1c, 0x28, 0xff},
+	{0xb5, 0x1d, 0x3d, 0xff},
+	{0x63, 0x28, 0x47, 0xff},
+};
+
+void land_set(ld29_land* land, ld29_land_type t, whitgl_ivec pos)
+{
+	if(pos.y < 0 || pos.y >= land->size.y) return;
+	pos.x = whitgl_iwrap(pos.x, 0, land->size.x);
+	int index = (pos.x+pos.y*land->size.x)*3;
+	land->data[index] = land_colors[t].r;
+	land->data[index+1] = land_colors[t].g;
+	land->data[index+2] = land_colors[t].b;
+}
+
+ld29_land_type land_get(const ld29_land* land, whitgl_ivec pos)
+{
+	if(pos.y < 0) return LAND_SKY;
+	if(pos.y >= land->size.y) return LAND_GROUND;
+	pos.x = whitgl_iwrap(pos.x, 0, land->size.x);
+	int index = (pos.x+pos.y*land->size.x)*3;
+	int i;
+	for(i=0; i<LAND_MAX; i++)
+	{
+		if(land->data[index] == land_colors[i].r)
+			return i;
+	}
+	WHITGL_LOG("land_get unrecognised land type %d %d %d", land_colors[i].r, land_colors[i].g, land_colors[i].b);
+	return LAND_SKY;
+}
+
+void land_zero(ld29_land* land)
+{
+	land->size.x = LAND_XRES;
+	land->size.y = LAND_YRES;
 
 	int i;
-	for(i=0; i<l->size.x*l->size.y*3; i+=3)
+	for(i=0; i<land->size.x*land->size.y*3; i+=3)
 	{
-		int y = i/(l->size.x*3);
+		int y = i/(land->size.x*3);
 		if(y > 100)
 		{
-			l->data[i] = 0xb5;
-			l->data[i+1] = 0x1d;
-			l->data[i+2] = 0x3d;
+			land->data[i] = 0xb5;
+			land->data[i+1] = 0x1d;
+			land->data[i+2] = 0x3d;
 		}
 		else
 		{
-			l->data[i] = 0x5a;
-			l->data[i+1] = 0x1c;
-			l->data[i+2] = 0x28;
+			land->data[i] = 0x5a;
+			land->data[i+1] = 0x1c;
+			land->data[i+2] = 0x28;
 		}
 	}
 }
@@ -38,24 +72,13 @@ void land_update(ld29_land* land)
 		whitgl_ivec under_pos = pos;
 		under_pos.x += whitgl_randint(3)-1;
 		under_pos.y++;
-		if(land_filled(land, under_pos))
+		if(land_get(land, under_pos) == LAND_GROUND)
 		{
-			int index = (pos.x+pos.y*land->size.x)*3;
-			if(land->data[index] == 0x63)
-			{
-				land->data[index] = 0xb5;
-				land->data[index+1] = 0x1d;
-				land->data[index+2] = 0x3d;
-			}
+			land_set(land, LAND_GROUND, pos);
 		} else if(whitgl_randint(4) == 1)
 		{
-			int index = (pos.x+pos.y*land->size.x)*3;
-			if(land->data[index] == 0xb5)
-			{
-				land->data[index] = 0x63;
-				land->data[index+1] = 0x28;
-				land->data[index+2] = 0x47;
-			}
+			if(land_get(land, pos) == LAND_GROUND)
+				land_set(land, LAND_TUNNEL, pos);
 		}
 		num_checks--;
 	}
@@ -99,16 +122,4 @@ void land_draw(const ld29_land* land, whitgl_ivec camera)
 	dest.a = camera;
 	dest.b = whitgl_ivec_add(camera, land->size);
 	whitgl_sys_draw_tex_iaabb(IMAGE_LAND, src, dest);
-}
-
-bool land_filled(const ld29_land* land, whitgl_ivec p)
-{
-	while(p.x < 0) p.x += land->size.x;
-	while(p.x >= land->size.x) p.x -= land->size.x;
-	if(p.y < 0)
-		return false;
-	if(p.y >= land->size.y)
-		return true;
-	int index = (p.x+p.y*land->size.x)*3;
-	return land->data[index] == 0xb5;
 }

@@ -20,9 +20,8 @@ ld29_egg egg_update(ld29_egg in, const ld29_land* land)
 	if(in.dead)
 		return in;
 	ld29_egg out = egg_zero(land);
-	bool filled = land_filled(land, whitgl_fvec_to_ivec(in.pos));
 	out.speed = in.speed;
-	if(filled)
+	if(land_get(land, whitgl_fvec_to_ivec(in.pos)) == LAND_GROUND)
 	{
 		out.speed.y = 0;
 		out.pos = in.pos;
