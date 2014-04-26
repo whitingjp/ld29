@@ -13,6 +13,7 @@ struct land
 };
 
 void land_zero(land* land);
+void land_update(land* land);
 void land_splat(land* land, whitgl_fcircle c);
 void land_draw(const land* land);
 bool land_filled(const land* land, whitgl_ivec p);

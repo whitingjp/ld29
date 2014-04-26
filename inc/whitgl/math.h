@@ -85,6 +85,10 @@ whitgl_iaabb whitgl_faabb_to_iaabb(whitgl_faabb in);
 whitgl_fvec whitgl_angle_to_fvec(whitgl_float in);
 whitgl_float whitgl_fvec_to_angle(whitgl_fvec in);
 
+void whitgl_randseed(whitgl_int seed);
+whitgl_int whitgl_randint(whitgl_int size);
+whitgl_float whitgl_randfloat();
+
 static const whitgl_float whitgl_pi = 3.14159;
 
 #endif // WHITGL_MATH_H_

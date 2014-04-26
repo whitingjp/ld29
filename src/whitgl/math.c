@@ -1,4 +1,5 @@
 #include <math.h>
+#include <stdlib.h>
 
 #include <whitgl/logging.h>
 #include <whitgl/math.h>
@@ -278,4 +279,17 @@ whitgl_fvec whitgl_angle_to_fvec(whitgl_float in)
 whitgl_float whitgl_fvec_to_angle(whitgl_fvec in)
 {
 	return atan2(in.y, in.x);
+}
+
+void whitgl_randseed(whitgl_int seed)
+{
+	srand(seed);
+}
+whitgl_int whitgl_randint(whitgl_int size)
+{
+	return rand() % size;
+}
+whitgl_float whitgl_randfloat()
+{
+	return rand() / (whitgl_float)RAND_MAX;
 }

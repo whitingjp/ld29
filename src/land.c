@@ -26,6 +26,26 @@ void land_zero(land* l)
 		}
 	}	
 }
+void land_update(land* land)
+{
+	int num_checks = 1024;
+	while(num_checks)
+	{
+		whitgl_ivec pos = whitgl_ivec_zero;
+		pos.x = whitgl_randint(land->size.x);
+		pos.y = whitgl_randint(land->size.y-1);
+		whitgl_ivec under_pos = pos;
+		under_pos.y++;
+		if(!land_filled(land, pos) && land_filled(land, under_pos))
+		{
+			int index = (pos.x+pos.y*land->size.x)*3;
+			land->data[index] = 0xb5;
+			land->data[index+1] = 0x1d;
+			land->data[index+2] = 0x3d;
+		}
+		num_checks--;
+	}
+}
 void land_splat(land* land, whitgl_fcircle c)
 {
 	whitgl_ivec center = whitgl_fvec_to_ivec(c.pos);
