@@ -46,13 +46,16 @@ int main()
 		while(update_time > 0)
 		{
 			w = worm_update(w);
-			land_splat(&l, whitgl_fvec_to_ivec(w.segments[0]));
+			whitgl_fcircle splat = whitgl_fcircle_zero;
+			splat.pos = w.segments[0];
+			splat.size = 80;
+			land_splat(&l, splat);
 			update_time -= 1.0/60.0;
 		}
 
 		whitgl_sys_draw_init();
 		land_draw(&l);
-		worm_draw(w);		
+		worm_draw(w);
 		whitgl_sys_draw_finish();
 
 		if(whitgl_input_pressed(WHITGL_INPUT_ESC))
