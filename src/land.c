@@ -12,7 +12,7 @@ void land_zero(land* l)
 	for(i=0; i<l->size.x*l->size.y*3; i+=3)
 	{
 		int y = i/(l->size.x*3);
-		if(y > 200)
+		if(y > 100)
 		{
 			l->data[i] = 0xb5;
 			l->data[i+1] = 0x1d;

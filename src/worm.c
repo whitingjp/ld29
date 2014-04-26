@@ -9,7 +9,7 @@ worm worm_zero()
 	worm out;
 	int i;
 	whitgl_fvec start = whitgl_fvec_zero;
-	start.x = 256;
+	start.x = 128;
 	for(i=0; i<WORM_NUM_SEGMENTS; i++)
 		out.segments[i] = start;
 	out.speed = whitgl_fvec_zero;
@@ -32,13 +32,13 @@ worm worm_update(worm in, const land* land)
 			out.dir -= dir_speed;
 		if(whitgl_input_down(WHITGL_INPUT_RIGHT))
 			out.dir += dir_speed;
-		whitgl_float speed = 4;
+		whitgl_float speed = 2;
 		whitgl_fvec speed_scale = {speed, speed};
 		out.speed = whitgl_fvec_scale(whitgl_angle_to_fvec(out.dir), speed_scale);
 	} else
 	{
 		out.speed.x = in.speed.x;
-		out.speed.y = in.speed.y+0.1;
+		out.speed.y = in.speed.y+0.05;
 		out.dir = whitgl_fvec_to_angle(in.speed);
 	}
 
@@ -53,7 +53,7 @@ void worm_draw(worm w)
 	{
 		whitgl_fcircle c = whitgl_fcircle_zero;
 		c.pos = w.segments[i];
-		c.size = (whitgl_float)(WORM_NUM_SEGMENTS-i+12)/6;
+		c.size = (whitgl_float)(WORM_NUM_SEGMENTS-i+12)/12;
 		if(i%4==0) c.size *= 1.25;
 		whitgl_sys_draw_fcircle(c, color, 16);
 	}

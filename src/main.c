@@ -21,7 +21,7 @@ int main()
 	setup.name = "LD29";
 	setup.size.x = 512;
 	setup.size.y = 512;
-	setup.pixel_size = 1;
+	setup.pixel_size = 2;
 
 	worm w = worm_zero();
 
@@ -52,8 +52,8 @@ int main()
 		{
 			w = worm_update(w, l);
 			whitgl_fcircle splat = whitgl_fcircle_zero;
-			splat.pos = w.segments[3]; // can't do 0 because it mucks up land_filled
-			splat.size = 80;
+			splat.pos = w.segments[5]; // can't do 0 because it mucks up land_filled
+			splat.size = 40;
 			land_splat(l, splat);
 			update_time -= 1.0/60.0;
 		}
