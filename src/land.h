@@ -11,7 +11,7 @@ typedef struct
 	unsigned char data[LAND_XRES*LAND_YRES*3];
 } land;
 
-land land_zero();
+void land_zero(land* land);
 void land_splat(land* land, whitgl_fcircle c);
 void land_draw(const land* land);
 

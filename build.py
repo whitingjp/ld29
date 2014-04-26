@@ -41,6 +41,9 @@ else:
   cflags += ' -Iinput/fmod/linux/inc'
   ldflags += ' -Wl,-rpath=.,--enable-new-dtags -Linput/fmod/linux/lib -lglfw -lGLU -lGL -lGLEW -lfmodex-4.44.15 -lSOIL'
 
+# clfags += -pg
+# ldflags += -pg
+
 n.variable('cflags', cflags)
 n.variable('ldflags', ldflags)
 n.newline()

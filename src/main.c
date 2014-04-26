@@ -1,5 +1,6 @@
 #include <stdbool.h>
 #include <stddef.h>
+#include <stdlib.h>
 
 #include <whitgl/input.h>
 #include <whitgl/logging.h>
@@ -10,6 +11,8 @@
 #include <land.h>
 #include <worm.h>
 
+land* l;
+
 int main()
 {
 	WHITGL_LOG("Starting main.");
@@ -18,14 +21,15 @@ int main()
 	setup.name = "LD29";
 	setup.size.x = 512;
 	setup.size.y = 512;
-	setup.pixel_size = 2;
+	setup.pixel_size = 1;
 
 	worm w = worm_zero();
 
 	if(!whitgl_sys_init(setup))
 		return 1;
 
-	land l = land_zero();
+	l = malloc(sizeof(land));
+	land_zero(l);
 
 	whitgl_sound_init();
 	whitgl_input_init();
@@ -43,18 +47,19 @@ int main()
 		then = now;
 		now = whitgl_sys_get_time();
 		update_time += now-then;
+		//WHITGL_LOG("fps: %f", 1.0/(now-then));
 		while(update_time > 0)
 		{
 			w = worm_update(w);
 			whitgl_fcircle splat = whitgl_fcircle_zero;
 			splat.pos = w.segments[0];
 			splat.size = 80;
-			land_splat(&l, splat);
+			land_splat(l, splat);
 			update_time -= 1.0/60.0;
 		}
 
 		whitgl_sys_draw_init();
-		land_draw(&l);
+		land_draw(l);
 		worm_draw(w);
 		whitgl_sys_draw_finish();
 
@@ -66,6 +71,8 @@ int main()
 
 	whitgl_input_shutdown();
 	whitgl_sound_shutdown();
+
+	free(l);
 
 	whitgl_sys_close();
 
