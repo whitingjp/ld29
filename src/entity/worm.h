@@ -3,7 +3,7 @@
 
 #include <whitgl/math.h>
 
-#include <land.h>
+#include <entity/land.h>
 
 #define WORM_NUM_SEGMENTS (48)
 typedef struct

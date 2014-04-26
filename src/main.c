@@ -19,7 +19,7 @@ int main()
 	setup.name = "LD29";
 	setup.size.x = 512;
 	setup.size.y = 512;
-	setup.pixel_size = 2;
+	setup.pixel_size = 1;
 
 	if(!whitgl_sys_init(setup))
 		return 1;

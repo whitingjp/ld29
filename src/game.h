@@ -1,8 +1,8 @@
 #ifndef GAME_H
 #define GAME_H
 
-#include <land.h>
-#include <worm.h>
+#include <entity/land.h>
+#include <entity/worm.h>
 
 typedef struct
 {
