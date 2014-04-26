@@ -12,6 +12,7 @@ driller driller_zero(whitgl_fvec pos)
 	out.speed = whitgl_fvec_zero;
 	out.drill_timer = 0;
 	out.beam_charge = 0;
+	out.attack = damage_zero;
 	return out;
 }
 driller driller_update(driller in, const land* land, egg e)
@@ -29,7 +30,12 @@ driller driller_update(driller in, const land* land, egg e)
 		out.speed.y = 0.5;
 	else
 		out.beam_charge = in.beam_charge + 2.0/60.0;
-	if(out.beam_charge > 1) out.beam_charge = 1;
+	if(out.beam_charge > 1)
+	{
+		out.beam_charge = 1;
+		out.attack.type = DAMAGE_SIDE;
+		out.attack.pos = out.pos;
+	}
 	out.pos = whitgl_fvec_add(in.pos, out.speed);
 	return out;
 }

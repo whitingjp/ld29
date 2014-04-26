@@ -22,6 +22,12 @@ void game_update(game* g)
 	g->w = worm_update(g->w, g->l);
 	g->e = egg_update(g->e, g->l);
 	g->drill = driller_update(g->drill, g->l, g->e);
+	if(g->drill.attack.type != DAMAGE_NONE)
+	{
+		game_do_damage(g, g->drill.attack);
+		whitgl_fvec drill_pos = {g->l->size.x/2-25, 0};
+		g->drill = driller_zero(drill_pos);
+	}
 	whitgl_fcircle splat = whitgl_fcircle_zero;
 	splat.pos = g->w.segments[5]; // can't do 0 because it mucks up land_filled
 	splat.size = 40;
@@ -29,6 +35,11 @@ void game_update(game* g)
 	splat.pos = g->drill.pos;
 	splat.size = 5;
 	land_splat(g->l, splat);
+}
+void game_do_damage(game* g, damage d)
+{
+	(void)g;
+	(void)d;
 }
 void game_draw(const game* g)
 {
