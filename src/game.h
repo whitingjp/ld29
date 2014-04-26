@@ -10,9 +10,9 @@
 
 typedef struct
 {
-	ld29_worm w;
-	ld29_egg e;
-	ld29_land* l;
+	ld29_worm worm;
+	ld29_egg egg;
+	ld29_land* land;
 	ld29_driller drill;
 } ld29_game;
 
