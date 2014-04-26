@@ -98,17 +98,12 @@ void land_splat(ld29_land* land, whitgl_fcircle c)
 	{
 		for(pos.y=bounds.a.y; pos.y<=bounds.b.y; pos.y++)
 		{
-			int index = (pos.x+pos.y*land->size.x)*3;
-			if(index < 0 || index >= land->size.x*land->size.y*3)
-				continue;
 			whitgl_int sqmag = whitgl_ivec_sqmagnitude(whitgl_ivec_sub(center, pos));
 			if(sqmag > c.size*c.size)
 				continue;
-			if(land->data[index] == 0x5a)
+			if(land_get(land, pos) == LAND_SKY)
 				continue;
-			land->data[index] = 0x63;
-			land->data[index+1] = 0x28;
-			land->data[index+2] = 0x47;
+			land_set(land, LAND_TUNNEL, pos);
 		}
 	}
 }

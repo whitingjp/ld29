@@ -33,7 +33,7 @@ void game_update(ld29_game* g)
 		g->drill = driller_zero(drill_pos);
 	}
 	whitgl_fcircle splat = whitgl_fcircle_zero;
-	splat.pos = g->worm.segments[5]; // can't do 0 because it mucks up land_filled
+	splat.pos = g->worm.segments[5]; // can't do 0 because it mucks up land_get
 	splat.size = 6;
 	land_splat(g->land, splat);
 	splat.pos = g->drill.pos;
@@ -75,12 +75,14 @@ void game_draw(const ld29_game* g, whitgl_ivec screen_size)
 	if(camera.y < screen_size.y-g->land->size.y)
 		camera.y = screen_size.y-g->land->size.y;
 
+	camera.x += g->land->size.x*wrap_dir;
+
 	land_draw(g->land, camera);
 	worm_draw(g->worm, camera);
 	egg_draw(g->egg, camera);
 	driller_draw(g->drill, camera);
 
-	camera.x += g->land->size.x*wrap_dir;
+	camera.x -= g->land->size.x*wrap_dir;
 
 	land_draw(g->land, camera);
 	worm_draw(g->worm, camera);
