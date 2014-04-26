@@ -18,9 +18,9 @@ int main()
 
 	whitgl_sys_setup setup = whitgl_default_setup;
 	setup.name = "LD29";
-	setup.size.x = 160;
-	setup.size.y = 120;
-	setup.pixel_size = 6;
+	setup.size.x = 320;
+	setup.size.y = 240;
+	setup.pixel_size = 3;
 	setup.fullscreen = false;
 
 	if(!whitgl_sys_init(&setup))

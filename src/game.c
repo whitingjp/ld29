@@ -65,10 +65,23 @@ void game_draw(const ld29_game* g, whitgl_ivec screen_size)
 	whitgl_ivec camera = whitgl_ivec_inverse(whitgl_fvec_to_ivec(g->worm.segments[0]));
 	camera.x += screen_size.x/2;
 	camera.y += screen_size.y/2;
-	if(camera.x > 0) camera.x = 0;
-	if(camera.y > 0) camera.y = 0;
-	if(camera.x < screen_size.x-g->land->size.x) camera.x = screen_size.x-g->land->size.x;
-	if(camera.y < screen_size.y-g->land->size.y) camera.y = screen_size.y-g->land->size.y;
+	int wrap_dir = 0;
+	if(camera.x > 0)
+		wrap_dir = -1;
+	if(camera.x < screen_size.x-g->land->size.x)
+		wrap_dir = 1;
+	if(camera.y > 0)
+		camera.y = 0;
+	if(camera.y < screen_size.y-g->land->size.y)
+		camera.y = screen_size.y-g->land->size.y;
+
+	land_draw(g->land, camera);
+	worm_draw(g->worm, camera);
+	egg_draw(g->egg, camera);
+	driller_draw(g->drill, camera);
+
+	camera.x += g->land->size.x*wrap_dir;
+
 	land_draw(g->land, camera);
 	worm_draw(g->worm, camera);
 	egg_draw(g->egg, camera);
