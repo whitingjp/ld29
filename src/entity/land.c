@@ -68,7 +68,7 @@ void land_update(ld29_land* land)
 	{
 		whitgl_ivec pos = whitgl_ivec_zero;
 		pos.x = whitgl_randint(land->size.x);
-		pos.y = whitgl_randint(land->size.y-1);
+		pos.y = whitgl_randint(land->size.y);
 		whitgl_ivec under_pos = pos;
 		under_pos.x += whitgl_randint(3)-1;
 		under_pos.y++;
