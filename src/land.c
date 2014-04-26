@@ -28,6 +28,12 @@ land land_zero()
 	}	
 	return out;
 }
+void land_splat(land* land, whitgl_ivec pos)
+{
+	int index = (pos.x+pos.y*land->size.x)*3;
+	land->data[index] = 0;
+}
+
 void land_draw(const land* land)
 {
 	whitgl_sys_image_from_data(4, land->size, land->data);

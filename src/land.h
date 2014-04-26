@@ -12,6 +12,7 @@ typedef struct
 } land;
 
 land land_zero();
+void land_splat(land* land, whitgl_ivec pos);
 void land_draw(const land* land);
 
 #endif // LAND_H

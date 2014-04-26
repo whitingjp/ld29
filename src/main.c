@@ -46,6 +46,7 @@ int main()
 		while(update_time > 0)
 		{
 			w = worm_update(w);
+			land_splat(&l, whitgl_fvec_to_ivec(w.segments[0]));
 			update_time -= 1.0/60.0;
 		}
 
