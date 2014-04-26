@@ -60,6 +60,29 @@ void land_zero(ld29_land* land)
 			land->data[i+2] = 0x28;
 		}
 	}
+	land_erode(land);
+}
+void land_erode(ld29_land* land)
+{
+	int num_checks = 1024*1024*5;
+	while(num_checks)
+	{
+		whitgl_ivec pos = whitgl_ivec_zero;
+		pos.x = whitgl_randint(land->size.x);
+		pos.y = whitgl_randint(land->size.y);
+		whitgl_ivec test_pos = pos;
+		test_pos.x += whitgl_randint(3)-1;
+		test_pos.y += whitgl_randint(3)-1;
+		if(land_get(land, test_pos) == LAND_GROUND)
+		{
+			land_set(land, LAND_GROUND, pos);
+		} else
+		{
+			if(land_get(land, pos) == LAND_GROUND)
+				land_set(land, LAND_TUNNEL, pos);
+		}
+		num_checks--;
+	}
 }
 void land_update(ld29_land* land)
 {
