@@ -10,12 +10,19 @@ worm worm_zero()
 	int i;
 	for(i=0; i<WORM_NUM_SEGMENTS; i++)
 		out.segments[i] = whitgl_fvec_zero;
-	out.speed = whitgl_fvec_zero;
+	out.dir = 0;
 	return out;
 }
 worm worm_update(worm in)
 {
-	return in;
+	worm out;
+	int i;
+	for(i=0; i<WORM_NUM_SEGMENTS-1; i++)
+		out.segments[i+1] = in.segments[i];
+	out.segments[0] = in.segments[0];
+	out.segments[0].y += 0.5;
+	out.dir = in.dir;
+	return out;
 }
 void worm_draw(worm w)
 {

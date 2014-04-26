@@ -23,11 +23,24 @@ int main()
 	whitgl_sound_init();
 	whitgl_input_init();
 
+	double now = whitgl_sys_get_time();
+	double then = now;
+	double update_time = 0;
+
 	bool running = true;
 	while(running)
 	{
 		whitgl_sound_update();
 		whitgl_input_update();
+
+		then = now;
+		now = whitgl_sys_get_time();
+		update_time += now-then;
+		while(update_time > 0)
+		{
+			w = worm_update(w);
+			update_time -= 1.0/60.0;
+		}
 
 		whitgl_sys_draw_init();
 		worm_draw(w);
