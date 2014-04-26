@@ -21,7 +21,7 @@ void game_update(game* g)
 	land_update(g->l);
 	g->w = worm_update(g->w, g->l);
 	g->e = egg_update(g->e, g->l);
-	g->drill = driller_update(g->drill, g->l);
+	g->drill = driller_update(g->drill, g->l, g->e);
 	whitgl_fcircle splat = whitgl_fcircle_zero;
 	splat.pos = g->w.segments[5]; // can't do 0 because it mucks up land_filled
 	splat.size = 40;
