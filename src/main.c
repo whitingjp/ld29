@@ -1,6 +1,5 @@
 #include <stdbool.h>
 #include <stddef.h>
-#include <stdlib.h>
 
 #include <whitgl/input.h>
 #include <whitgl/logging.h>
@@ -8,10 +7,9 @@
 #include <whitgl/sound.h>
 #include <whitgl/sys.h>
 
-#include <land.h>
-#include <worm.h>
+#include <game.h>
 
-land* l;
+game g;
 
 int main()
 {
@@ -26,9 +24,7 @@ int main()
 	if(!whitgl_sys_init(setup))
 		return 1;
 
-	l = malloc(sizeof(land));
-	land_zero(l);
-	worm w = worm_zero(l);
+	game_init(&g);
 
 	whitgl_sound_init();
 	whitgl_input_init();
@@ -49,18 +45,12 @@ int main()
 		//WHITGL_LOG("fps: %f", 1.0/(now-then));
 		while(update_time > 0)
 		{
-			land_update(l);
-			w = worm_update(w, l);
-			whitgl_fcircle splat = whitgl_fcircle_zero;
-			splat.pos = w.segments[5]; // can't do 0 because it mucks up land_filled
-			splat.size = 40;
-			land_splat(l, splat);			
+			game_update(&g);
 			update_time -= 1.0/60.0;
 		}
 
 		whitgl_sys_draw_init();
-		land_draw(l);
-		worm_draw(w);
+		game_draw(&g);
 		whitgl_sys_draw_finish();
 
 		if(whitgl_input_pressed(WHITGL_INPUT_ESC))
@@ -71,8 +61,6 @@ int main()
 
 	whitgl_input_shutdown();
 	whitgl_sound_shutdown();
-
-	free(l);
 
 	whitgl_sys_close();
 

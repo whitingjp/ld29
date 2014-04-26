@@ -1,0 +1,18 @@
+#ifndef GAME_H
+#define GAME_H
+
+#include <land.h>
+#include <worm.h>
+
+typedef struct
+{
+	worm w;
+	land* l;
+} game;
+
+void game_init(game* g);
+void game_shutdown(game* g);
+void game_update(game* g);
+void game_draw(const game* g);
+
+#endif // GAME_H
