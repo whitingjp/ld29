@@ -10,7 +10,7 @@ void game_init(ld29_game* g)
 	g->egg = egg_zero(g->land);
 	whitgl_fcircle splat = whitgl_fcircle_zero;
 	splat.pos = g->egg.pos;
-	splat.size = 200;
+	splat.size = 20;
 	land_splat(g->land, splat);
 	whitgl_fvec drill_pos = {g->land->size.x/2-25, 0};
 	g->drill = driller_zero(drill_pos);
@@ -34,10 +34,10 @@ void game_update(ld29_game* g)
 	}
 	whitgl_fcircle splat = whitgl_fcircle_zero;
 	splat.pos = g->worm.segments[5]; // can't do 0 because it mucks up land_filled
-	splat.size = 40;
+	splat.size = 6;
 	land_splat(g->land, splat);
 	splat.pos = g->drill.pos;
-	splat.size = 5;
+	splat.size = 2;
 	land_splat(g->land, splat);
 }
 void game_do_damage(ld29_game* g, ld29_damage damage)
@@ -50,7 +50,7 @@ void game_do_damage(ld29_game* g, ld29_damage damage)
 	{
 		whitgl_fcircle splat = whitgl_fcircle_zero;
 		splat.pos = p;
-		splat.size = 16;
+		splat.size = 5;
 		land_splat(g->land, splat);
 		whitgl_float sqmag = whitgl_fvec_sqmagnitude(whitgl_fvec_sub(g->egg.pos, p));
 		if(sqmag < 16)
