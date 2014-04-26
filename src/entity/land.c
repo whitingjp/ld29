@@ -74,6 +74,7 @@ void land_update(ld29_land* land)
 		under_pos.y++;
 		if(land_get(land, under_pos) == LAND_GROUND)
 		{
+			if(land_get(land, pos) != LAND_SKY)
 			land_set(land, LAND_GROUND, pos);
 		} else if(whitgl_randint(4) == 1)
 		{
