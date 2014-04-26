@@ -64,7 +64,7 @@ void land_zero(ld29_land* land)
 }
 void land_erode(ld29_land* land)
 {
-	int num_checks = 1024*1024*5;
+	int num_checks = 1024*1024*2;
 	while(num_checks)
 	{
 		whitgl_ivec pos = whitgl_ivec_zero;

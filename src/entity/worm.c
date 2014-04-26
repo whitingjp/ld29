@@ -86,4 +86,31 @@ void worm_draw(ld29_worm worm, whitgl_ivec camera)
 		if(i%4==0) c.size *= 1.25;
 		whitgl_sys_draw_fcircle(c, color, 16);
 	}
+	// maw
+	whitgl_fvec maw;
+	whitgl_float maw_ang_off = whitgl_pi/4;
+	whitgl_fvec maw_off_scale;
+	whitgl_fvec maw_off;
+	whitgl_fcircle mawc = whitgl_fcircle_zero;
+
+	for(i=0; i<2; i++)
+	{
+		maw_off = whitgl_angle_to_fvec(worm.dir-maw_ang_off);
+		maw_off_scale.x = 9; maw_off_scale.y = 9;
+		maw = whitgl_fvec_add(worm.segments[0], whitgl_fvec_scale(maw_off, maw_off_scale));
+		mawc.pos = whitgl_fvec_add(maw, whitgl_ivec_to_fvec(camera));
+		mawc.size = 1.5;
+		whitgl_sys_draw_fcircle(mawc, color, 16);
+
+		maw_off = whitgl_angle_to_fvec(worm.dir-maw_ang_off*1.2);
+		maw_off_scale.x = 6; maw_off_scale.y = 6;
+		maw = whitgl_fvec_add(worm.segments[0], whitgl_fvec_scale(maw_off, maw_off_scale));
+		mawc.pos = whitgl_fvec_add(maw, whitgl_ivec_to_fvec(camera));
+		mawc.size = 2.5;
+		whitgl_sys_draw_fcircle(mawc, color, 16);
+
+		maw_ang_off = -maw_ang_off;
+	}
+
+
 }
