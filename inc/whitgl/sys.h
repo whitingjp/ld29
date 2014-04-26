@@ -48,7 +48,7 @@ typedef struct
 } whitgl_shader;
 static const whitgl_shader whitgl_shader_zero = {NULL, NULL, 0, {}};
 
-bool whitgl_sys_init(whitgl_sys_setup setup);
+bool whitgl_sys_init(whitgl_sys_setup* setup);
 bool whitgl_sys_should_close();
 void whitgl_sys_close();
 

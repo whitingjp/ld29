@@ -3,7 +3,7 @@
 
 #include <whitgl/math.h>
 
-#define LAND_XRES (512)
+#define LAND_XRES (1024)
 #define LAND_YRES (512)
 typedef struct
 {

@@ -155,10 +155,8 @@ void whitgl_set_shader_uniform(whitgl_shader_slot type, int uniform, float value
 	shaders[type].uniforms[uniform] = value;
 }
 
-bool whitgl_sys_init(whitgl_sys_setup setup)
+bool whitgl_sys_init(whitgl_sys_setup* setup)
 {
-	_setup = setup;
-
 	bool result;
 	_shouldClose = false;
 
@@ -179,19 +177,21 @@ bool whitgl_sys_init(whitgl_sys_setup setup)
 	GLFWvidmode desktop;
 	glfwGetDesktopMode( &desktop );
 
-	_pixel_scale = setup.pixel_size;
-	if(setup.fullscreen)
+	_pixel_scale = setup->pixel_size;
+	if(setup->fullscreen)
 	{
 		result = glfwOpenWindow( desktop.Width, desktop.Height, desktop.RedBits,
 		                         desktop.GreenBits, desktop.BlueBits, 8, 32, 0,
 		                         GLFW_FULLSCREEN );
-		_pixel_scale = desktop.Width/setup.size.x;
+		_pixel_scale = desktop.Width/setup->size.x;
+		setup->size.x = desktop.Width/_pixel_scale;
+		setup->size.y = desktop.Height/_pixel_scale;
 	} else
 	{
-		result = glfwOpenWindow( setup.size.x*_pixel_scale, setup.size.y*_pixel_scale,
+		result = glfwOpenWindow( setup->size.x*_pixel_scale, setup->size.y*_pixel_scale,
 		                         0,0,0,0, 0,0, GLFW_WINDOW );
 	}
-	glfwSetWindowTitle(setup.name);
+	glfwSetWindowTitle(setup->name);
 	if(!result)
 	{
 		WHITGL_LOG("Failed to open GLFW window");
@@ -218,7 +218,7 @@ bool whitgl_sys_init(whitgl_sys_setup setup)
 	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
 	glGenTextures(1, &intermediateTexture);
 	glBindTexture(GL_TEXTURE_2D, intermediateTexture);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, setup.size.x, setup.size.y, 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, setup->size.x, setup->size.y, 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, intermediateTexture, 0);
@@ -233,13 +233,15 @@ bool whitgl_sys_init(whitgl_sys_setup setup)
 
 	glfwSetWindowCloseCallback(_whitgl_sys_close_callback);
 
-	if(setup.disable_mouse_cursor)
+	if(setup->disable_mouse_cursor)
 		glfwDisable(GLFW_MOUSE_CURSOR);
 
 	int i;
 	for(i=0; i<WHITGL_IMAGE_MAX; i++)
 		images[i].id = -1;
 	num_images = 0;
+
+	_setup = *setup;
 
 	return true;
 }
