@@ -19,9 +19,16 @@ worm worm_update(worm in)
 	int i;
 	for(i=0; i<WORM_NUM_SEGMENTS-1; i++)
 		out.segments[i+1] = in.segments[i];
-	out.segments[0] = in.segments[0];
-	out.segments[0].y += 0.5;
+
+	whitgl_float dir_speed = 0.1;
 	out.dir = in.dir;
+	if(whitgl_input_down(WHITGL_INPUT_LEFT))
+		out.dir -= dir_speed;
+	if(whitgl_input_down(WHITGL_INPUT_RIGHT))
+		out.dir += dir_speed;
+
+	whitgl_fvec dir_vec = whitgl_angle_to_fvec(out.dir);
+	out.segments[0] = whitgl_fvec_add(in.segments[0], dir_vec);	
 	return out;
 }
 void worm_draw(worm w)

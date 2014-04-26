@@ -1,3 +1,5 @@
+#include <math.h>
+
 #include <whitgl/logging.h>
 #include <whitgl/math.h>
 
@@ -235,5 +237,13 @@ whitgl_iaabb whitgl_faabb_to_iaabb(whitgl_faabb in)
 	whitgl_iaabb out;
 	out.a = whitgl_fvec_to_ivec(in.a);
 	out.b = whitgl_fvec_to_ivec(in.b);
+	return out;
+}
+
+whitgl_fvec whitgl_angle_to_fvec(whitgl_float in)
+{
+	whitgl_fvec out;
+	out.x = cos(in);
+	out.y = sin(in);
 	return out;
 }

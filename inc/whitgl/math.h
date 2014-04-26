@@ -73,4 +73,6 @@ whitgl_ivec whitgl_fvec_to_ivec(whitgl_fvec in);
 whitgl_faabb whitgl_iaabb_to_faabb(whitgl_iaabb in);
 whitgl_iaabb whitgl_faabb_to_iaabb(whitgl_faabb in);
 
+whitgl_fvec whitgl_angle_to_fvec(whitgl_float in);
+
 #endif // WHITGL_MATH_H_
