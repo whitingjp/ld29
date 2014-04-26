@@ -17,6 +17,7 @@ ld29_worm worm_zero(const ld29_land* land)
 	out.dir = -whitgl_pi/2;
 	out.boost = 0;
 	out.boost_dir = 0;
+	out.maw_anim = 0;
 	return out;
 }
 ld29_worm worm_update(ld29_worm in, const ld29_land* land)
@@ -26,7 +27,8 @@ ld29_worm worm_update(ld29_worm in, const ld29_land* land)
 	for(i=0; i<WORM_NUM_SEGMENTS-1; i++)
 		out.segments[i+1] = in.segments[i];
 
-	if(land_get(land, whitgl_fvec_to_ivec(in.segments[0])) == LAND_GROUND)
+	bool in_land = land_get(land, whitgl_fvec_to_ivec(in.segments[0])) == LAND_GROUND;
+	if(in_land)
 	{
 		whitgl_float dir_speed = 0.15;
 		whitgl_float boost_dir_speed = 0.03;
@@ -57,7 +59,7 @@ ld29_worm worm_update(ld29_worm in, const ld29_land* land)
 			out.boost_dir = out.boost_dir*0.9;
 		}
 
-		whitgl_float speed = 1.5*(1+whitgl_sqrt(whitgl_sqrt(out.boost)));
+		whitgl_float speed = 1.5*(1+whitgl_fsqrt(whitgl_fsqrt(out.boost)));
 		// WHITGL_LOG("boost_dir %.2f boost %.2f speed %.2f", out.boost_dir, out.boost, speed);
 		whitgl_fvec speed_scale = {speed, speed};
 		out.speed = whitgl_fvec_scale(whitgl_angle_to_fvec(out.dir), speed_scale);
@@ -72,6 +74,17 @@ ld29_worm worm_update(ld29_worm in, const ld29_land* land)
 
 	out.segments[0] = whitgl_fvec_add(in.segments[0], out.speed);
 	out.segments[0].x = whitgl_fwrap(out.segments[0].x, 0, land->size.x);
+
+	float maw_speed = whitgl_fsqrt(whitgl_fvec_sqmagnitude(out.speed))/35;
+	if(in_land || in.maw_anim != 0)
+		out.maw_anim = in.maw_anim+maw_speed;
+	else
+		out.maw_anim = in.maw_anim;
+	if(out.maw_anim > 1)
+	{
+		out.maw_anim--;
+		if(!in_land) out.maw_anim = 0;
+	}
 	return out;
 }
 void worm_draw(ld29_worm worm, whitgl_ivec camera)
@@ -88,7 +101,7 @@ void worm_draw(ld29_worm worm, whitgl_ivec camera)
 	}
 	// maw
 	whitgl_fvec maw;
-	whitgl_float maw_ang_off = whitgl_pi/4;
+	whitgl_float maw_ang_off = (whitgl_pi/5)+whitgl_fcos(worm.maw_anim*whitgl_pi*2)/5;
 	whitgl_fvec maw_off_scale;
 	whitgl_fvec maw_off;
 	whitgl_fcircle mawc = whitgl_fcircle_zero;

@@ -48,7 +48,7 @@ whitgl_float whitgl_fminmax(whitgl_float lower, whitgl_float upper, whitgl_float
 	if(n > upper) return upper;
 	return n;
 }
-whitgl_float whitgl_sqrt(whitgl_float a)
+whitgl_float whitgl_fsqrt(whitgl_float a)
 {
 	return sqrt(a);
 }
@@ -60,6 +60,14 @@ whitgl_float whitgl_fwrap(whitgl_float a, whitgl_float min, whitgl_float max)
 	while(a >= max)
 		a -= size;
 	return a;
+}
+whitgl_float whitgl_fsin(whitgl_float a)
+{
+	return sin(a);
+}
+whitgl_float whitgl_fcos(whitgl_float a)
+{
+	return cos(a);
 }
 
 whitgl_ivec whitgl_ivec_add(whitgl_ivec a, whitgl_ivec b)
