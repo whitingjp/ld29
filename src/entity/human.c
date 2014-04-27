@@ -54,6 +54,8 @@ ld29_human human_update(ld29_human in, const ld29_land* land)
 		else
 			{ out.pos.x += fore_dir; out.parachuting = 0; }
 
+		out.pos.x = whitgl_fwrap(out.pos.x, 0, land->size.x);
+
 		if(whitgl_randfloat() > 0.995)
 			out.going_left = !in.going_left;
 		out.move_click = 2;
