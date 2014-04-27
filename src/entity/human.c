@@ -86,7 +86,7 @@ void human_draw(ld29_human human, whitgl_ivec camera)
 	{
 		int fore_dir = human.going_left ? -1 : 1;
 		frame.x = 2;
-		offset.x = -4-fore_dir*8; offset.y = -16;
+		offset.x = -4-fore_dir*4; offset.y = -12;
 		draw_pos = whitgl_ivec_add( whitgl_fvec_to_ivec(human.pos), offset);
 		draw_pos = whitgl_ivec_add(draw_pos, camera);
 		whitgl_sys_draw_sprite(sprite, frame, draw_pos);

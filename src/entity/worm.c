@@ -13,7 +13,7 @@ ld29_worm worm_zero(const ld29_land* land)
 	start.x = land->size.x/2+50;
 	start.y = land->size.y-50;
 	int i;
-	for(i=0; i<WORM_NUM_SEGMENTS; i++)
+	for(i=0; i<WORM_MAX_SEGMENTS; i++)
 		out.segments[i] = start;
 	out.speed = whitgl_fvec_zero;
 	out.dir = -whitgl_pi/2;
@@ -24,6 +24,7 @@ ld29_worm worm_zero(const ld29_land* land)
 	out.vol_current = ld29_worm_volumes_zero;
 	out.vol_target = ld29_worm_volumes_zero;
 	out.air_time = 0;
+	out.num_segments = 32;
 	return out;
 }
 ld29_worm worm_update(ld29_worm in, const ld29_land* land)
@@ -31,8 +32,9 @@ ld29_worm worm_update(ld29_worm in, const ld29_land* land)
 	ld29_worm out = worm_zero(land);
 	out.vol_target = in.vol_target;
 	out.air_time = in.air_time;
+	out.num_segments = in.num_segments;
 	int i;
-	for(i=0; i<WORM_NUM_SEGMENTS-1; i++)
+	for(i=0; i<in.num_segments-1; i++)
 		out.segments[i+1] = in.segments[i];
 
 	ld29_land_type type = land_get(land, whitgl_fvec_to_ivec(in.segments[0]));
@@ -102,7 +104,7 @@ ld29_worm worm_update(ld29_worm in, const ld29_land* land)
 	{
 		out.air_time++;
 		out.vol_target.ground = 0.0;
-		if(out.air_time < WORM_NUM_SEGMENTS)
+		if(out.air_time < in.num_segments)
 			out.vol_target.emerge = 1.0;
 		else
 			out.vol_target.emerge = 0.0;
@@ -133,8 +135,12 @@ ld29_worm worm_update(ld29_worm in, const ld29_land* land)
 	if(out.ripple != -1)
 	{
 		out.ripple++;
-		if(out.ripple >= WORM_NUM_SEGMENTS)
+		if(out.ripple >= in.num_segments)
+		{
+			if(out.num_segments < WORM_MAX_SEGMENTS)
+				out.num_segments += 3;
 			out.ripple = -1;
+		}
 	}
 
 	out.vol_current.ground = (in.vol_current.ground*4 + out.vol_target.ground)/5;
@@ -155,11 +161,12 @@ void worm_draw(ld29_worm worm, whitgl_ivec camera)
 {
 	whitgl_sys_color color = {0xf4, 0xc2, 0xde, 0xff};
 	int i;
-	for(i=0; i<WORM_NUM_SEGMENTS; i++)
+	for(i=0; i<worm.num_segments; i++)
 	{
 		whitgl_fcircle c = whitgl_fcircle_zero;
 		c.pos = whitgl_fvec_add(worm.segments[i], whitgl_ivec_to_fvec(camera));
-		c.size = (whitgl_float)(WORM_NUM_SEGMENTS-i+12)/12;
+		float ratio = ((float)worm.num_segments-i)/worm.num_segments;
+		c.size = (whitgl_float)ratio*6;
 		if(i%4==0) c.size *= 1.25;
 		if(i==worm.ripple) c.size *= 1.5;
 		whitgl_sys_draw_fcircle(c, color, 16);
