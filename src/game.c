@@ -44,6 +44,7 @@ void game_init(ld29_game* g)
 	}
 	g->player = 0;
 	g->transition = 0;
+	g->throb = 0;
 }
 void game_shutdown(ld29_game* g)
 {
@@ -138,6 +139,9 @@ void game_update(ld29_game* g, whitgl_ivec screen_size)
 		g->transition = whitgl_fmax(g->transition-trans_speed, 0);
 	else
 		g->transition = whitgl_fmin(g->transition+trans_speed, 1);
+
+	g->throb = whitgl_fwrap(g->throb+0.025, 0, 1);
+	whitgl_set_shader_uniform(WHITGL_SHADER_POST, 1, whitgl_fsin(g->throb*whitgl_pi*2));
 }
 
 void _game_add_display_damage(whitgl_fcircle circle)

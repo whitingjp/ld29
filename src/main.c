@@ -20,9 +20,10 @@ in vec2 Texturepos;\
 out vec4 outColor;\
 uniform sampler2D tex;\
 uniform float blast;\
+uniform float throb;\
 void main()\
 {\
-	float off = 0.01;\
+	float off = 0.0075;\
 	vec2 north = Texturepos; north.y -= off;\
 	vec4 northt = texture( tex, north ); northt = floor(northt*1.1)/2.0;\
 	vec2 east = Texturepos; east.x += off;\
@@ -31,7 +32,8 @@ void main()\
 	vec4 southt = texture( tex, south ); southt = floor(southt*1.1)/2.0;\
 	vec2 west = Texturepos; west.x -= off;\
 	vec4 westt = texture( tex, west ); westt = floor(westt*1.1)/2.0;\
-	outColor = texture( tex, Texturepos )+northt/8.0+eastt/8.0+southt/8.0+westt/8.0;\
+	float divider = (8.0+throb*3);\
+	outColor = texture( tex, Texturepos )+northt/divider+eastt/divider+southt/divider+westt/divider;\
 	float dim = (1-Texturepos.y)/4;\
 	outColor -= vec4(dim, dim*0.5, dim*0.8, 0);\
 	outColor += vec4(blast, blast, blast*0.7, 0);\
@@ -46,7 +48,7 @@ int main()
 	setup.name = "Wyrmery";
 	setup.size.x = 320;
 	setup.size.y = 240;
-	setup.pixel_size = 2;
+	setup.pixel_size = 3;
 	setup.fullscreen = false;
 
 	if(!whitgl_sys_init(&setup))
@@ -73,8 +75,9 @@ int main()
 
 	whitgl_shader shader = whitgl_shader_zero;
 	shader.fragment_src = fragment_src;
-	shader.num_uniforms = 1;
+	shader.num_uniforms = 2;
 	shader.uniforms[0] = "blast";
+	shader.uniforms[1] = "throb";
 	whitgl_change_shader(WHITGL_SHADER_POST, shader);
 
 	WHITGL_LOG("Game init");

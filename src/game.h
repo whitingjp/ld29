@@ -20,6 +20,7 @@ typedef struct
 	ld29_human humans[MAX_HUMANS];
 	int player;
 	whitgl_float transition;
+	whitgl_float throb;
 } ld29_game;
 
 void game_init(ld29_game* g);
