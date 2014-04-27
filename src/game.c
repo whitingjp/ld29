@@ -29,6 +29,11 @@ void game_init(ld29_game* g)
 	int i;
 	for(i=0; i<MAX_DISPLAYED_DAMAGES; i++)
 		display_damages[i] = ld29_damage_display_zero;
+	for(i=0; i<MAX_HUMANS; i++)
+	{
+		whitgl_fvec human_pos = {whitgl_randint(g->land->size.x), 0};
+		g->humans[i] = human_zero(human_pos);
+	}
 }
 void game_shutdown(ld29_game* g)
 {
@@ -37,10 +42,13 @@ void game_shutdown(ld29_game* g)
 }
 void game_update(ld29_game* g)
 {
+	int i;
 	land_update(g->land);
 	g->worm = worm_update(g->worm, g->land);
 	g->egg = egg_update(g->egg, g->land);
 	g->drill = driller_update(g->drill, g->land);
+	for(i=0; i<MAX_HUMANS; i++)
+		g->humans[i] = human_update(g->humans[i], g->land);
 	if(g->drill.attack.type != DAMAGE_NONE)
 	{
 		game_do_damage(g, g->drill.attack);
@@ -55,7 +63,6 @@ void game_update(ld29_game* g)
 	splat.size = 2;
 	land_splat(g->land, splat);
 
-	int i;
 	for(i=0; i<MAX_DISPLAYED_DAMAGES; i++)
 	{
 		if(display_damages[i].timer <= 0)
@@ -147,6 +154,9 @@ void game_draw(const ld29_game* g, whitgl_ivec screen_size)
 	camera.x += g->land->size.x*wrap_dir;
 
 	land_draw(g->land, camera);
+	int i;
+	for(i=0; i<MAX_HUMANS; i++)
+		human_draw(g->humans[i], camera);
 	worm_draw(g->worm, camera);
 	egg_draw(g->egg, camera);
 	driller_draw(g->drill, camera);
@@ -155,6 +165,8 @@ void game_draw(const ld29_game* g, whitgl_ivec screen_size)
 	camera.x -= g->land->size.x*wrap_dir;
 
 	land_draw(g->land, camera);
+	for(i=0; i<MAX_HUMANS; i++)
+		human_draw(g->humans[i], camera);
 	worm_draw(g->worm, camera);
 	egg_draw(g->egg, camera);
 	driller_draw(g->drill, camera);

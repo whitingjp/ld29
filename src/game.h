@@ -3,17 +3,20 @@
 
 #include <entity/driller.h>
 #include <entity/egg.h>
+#include <entity/human.h>
 #include <entity/land.h>
 #include <entity/worm.h>
 
 #include <damage.h>
 
+#define MAX_HUMANS (16)
 typedef struct
 {
 	ld29_worm worm;
 	ld29_egg egg;
 	ld29_land* land;
 	ld29_driller drill;
+	ld29_human humans[MAX_HUMANS];
 } ld29_game;
 
 void game_init(ld29_game* g);
