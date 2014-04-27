@@ -11,6 +11,8 @@ typedef struct
 	whitgl_fvec pos;
 	bool going_left;
 	whitgl_float anim;
+	whitgl_int move_click;
+	int parachuting;
 } ld29_human;
 ld29_human human_zero(whitgl_fvec pos);
 ld29_human human_update(ld29_human in, const ld29_land* land);
