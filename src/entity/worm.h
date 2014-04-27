@@ -6,6 +6,7 @@
 #include <entity/land.h>
 
 #define WORM_MAX_SEGMENTS (128)
+#define WORM_MIN_SEGMENTS (16)
 
 typedef struct
 {
@@ -29,6 +30,7 @@ typedef struct
 	ld29_worm_volumes vol_target;
 	whitgl_int air_time;
 	whitgl_int num_segments;
+	whitgl_int hurt_segment;
 } ld29_worm;
 ld29_worm worm_zero(const ld29_land* land);
 ld29_worm worm_update(ld29_worm in, const ld29_land* land);

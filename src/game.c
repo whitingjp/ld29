@@ -139,6 +139,12 @@ void game_do_damage(ld29_game* g, ld29_damage damage)
 				if(whitgl_fvec_sqmagnitude(dist) < splat.size*splat.size)
 					g->humans[i].alive = false;
 			}
+			for(i=g->worm.num_segments-1; i>=0; i--)
+			{
+				whitgl_fvec dist = whitgl_fvec_sub(g->worm.segments[i], splat.pos);
+				if(whitgl_fvec_sqmagnitude(dist) < splat.size*splat.size)
+					g->worm.hurt_segment = i;
+			}
 			break;
 		}
 		default: break;

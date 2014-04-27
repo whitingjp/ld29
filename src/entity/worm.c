@@ -26,7 +26,8 @@ ld29_worm worm_zero(const ld29_land* land)
 	out.vol_current = ld29_worm_volumes_zero;
 	out.vol_target = ld29_worm_volumes_zero;
 	out.air_time = 0;
-	out.num_segments = 32;
+	out.num_segments = WORM_MIN_SEGMENTS*2;
+	out.hurt_segment = -1;
 	return out;
 }
 ld29_worm worm_update(ld29_worm in, const ld29_land* land)
@@ -35,9 +36,20 @@ ld29_worm worm_update(ld29_worm in, const ld29_land* land)
 	out.vol_target = in.vol_target;
 	out.air_time = in.air_time;
 	out.num_segments = in.num_segments;
+	out.hurt_segment = in.hurt_segment;
 	int i;
 	for(i=0; i<in.num_segments-1; i++)
 		out.segments[i+1] = in.segments[i];
+
+	if(out.hurt_segment != -1)
+	{
+		out = in;
+		if(out.num_segments <= WORM_MIN_SEGMENTS || out.num_segments <= out.hurt_segment)
+			out.hurt_segment = -1;
+		else
+			out.num_segments--;
+		return out;
+	}
 
 	ld29_land_type type = land_get(land, whitgl_fvec_to_ivec(in.segments[0]));
 	bool in_land = type == LAND_GROUND;
@@ -158,16 +170,20 @@ ld29_worm worm_update(ld29_worm in, const ld29_land* land)
 void worm_draw(ld29_worm worm, whitgl_ivec camera)
 {
 	whitgl_sys_color color = {0xf4, 0xc2, 0xde, 0xff};
+	whitgl_sys_color hurt_color = {0xae, 0xb7, 0x46, 0xff};
 	int i;
 	for(i=0; i<worm.num_segments; i++)
 	{
 		whitgl_fcircle c = whitgl_fcircle_zero;
 		c.pos = whitgl_fvec_add(worm.segments[i], whitgl_ivec_to_fvec(camera));
 		float ratio = ((float)worm.num_segments-i)/worm.num_segments;
-		c.size = (whitgl_float)ratio*6;
+		c.size = (whitgl_float)ratio*5+1;
 		if(i%4==0) c.size *= 1.25;
 		if(worm.has_ripple[i]) c.size *= 1.5;
-		whitgl_sys_draw_fcircle(c, color, 16);
+		if(worm.hurt_segment != -1 && i >= worm.hurt_segment)
+			whitgl_sys_draw_fcircle(c, hurt_color, 16);
+		else
+			whitgl_sys_draw_fcircle(c, color, 16);
 	}
 	// maw
 	whitgl_fvec maw;
