@@ -65,7 +65,7 @@ void land_zero(ld29_land* land)
 }
 void land_update(ld29_land* land)
 {
-	int num_checks = 1024;
+	int num_checks = 1024*2;
 	while(num_checks)
 	{
 		whitgl_ivec pos = whitgl_ivec_zero;
