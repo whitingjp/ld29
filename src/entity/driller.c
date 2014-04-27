@@ -24,7 +24,8 @@ ld29_driller driller_update(ld29_driller in, const ld29_land* land)
 
 	whitgl_ivec offset = {0, 4};
 
-	bool in_land = land_get(land, whitgl_ivec_add(whitgl_fvec_to_ivec(in.pos), offset)) == LAND_GROUND;
+	ld29_land_type land_type = land_get(land, whitgl_ivec_add(whitgl_fvec_to_ivec(in.pos), offset));
+	bool in_land = land_type == LAND_GROUND || land_type == LAND_BEDROCK;
 
 	bool entered_space = true;
 	int i;
@@ -46,7 +47,16 @@ ld29_driller driller_update(ld29_driller in, const ld29_land* land)
 	if(in_land && in.state == DRILLER_LANDING)
 		out.state = DRILLER_DRILLING;
 	if(in_land && in.beam_charge == 0)
-		out.speed.y = 0.5;
+	{
+		if(land_type == LAND_BEDROCK)
+		{
+			out.state = DRILLER_PRIMED;
+			out.speed.y = 0.1;
+		} else
+		{
+			out.speed.y = 0.5;
+		}
+	}
 	if(in.state == DRILLER_PRIMED)
 		out.beam_charge = in.beam_charge + 2.0/60.0;
 	if(in_land && out.beam_charge > 1)
