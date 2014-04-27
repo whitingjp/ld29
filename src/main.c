@@ -21,7 +21,7 @@ int main()
 	setup.name = "Wyrmery";
 	setup.size.x = 320;
 	setup.size.y = 240;
-	setup.pixel_size = 1;
+	setup.pixel_size = 2;
 	setup.fullscreen = false;
 
 	if(!whitgl_sys_init(&setup))

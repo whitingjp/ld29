@@ -60,7 +60,7 @@ void game_update(ld29_game* g, whitgl_ivec screen_size)
 			g->humans[i] = human_zero(human_pos);
 		}
 		whitgl_fvec dist = whitgl_fvec_sub(g->humans[i].pos, g->worm.segments[0]);
-		if(whitgl_fvec_sqmagnitude(dist) < 16*16)
+		if(whitgl_fvec_sqmagnitude(dist) < 12*12)
 		{
 			g->humans[i].alive = false;
 			g->worm.has_ripple[0] = true;
