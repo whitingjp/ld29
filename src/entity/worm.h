@@ -32,6 +32,7 @@ typedef struct
 	whitgl_int num_segments;
 	whitgl_int hurt_segment;
 	whitgl_float pregnancy;
+	bool alive;
 } ld29_worm;
 ld29_worm worm_zero(const ld29_land* land);
 ld29_worm worm_update(ld29_worm in, const ld29_land* land, bool is_player);

@@ -24,6 +24,7 @@ void game_init(ld29_game* g)
 	land_zero(g->land);
 	for(i=0; i<MAX_WORMS; i++)
 		g->worms[i] = worm_zero(g->land);
+	g->worms[0].alive = true;
 	g->egg = egg_zero();
 	whitgl_fvec drill_pos = {whitgl_randint(g->land->size.x), 0};
 	g->drill = driller_zero(drill_pos);
@@ -70,6 +71,7 @@ void game_update(ld29_game* g, whitgl_ivec screen_size)
 		int j;
 		for(j=0; j<MAX_WORMS; j++)
 		{
+			if(!g->worms[j].alive) continue;
 			whitgl_fvec dist = whitgl_fvec_sub(g->humans[i].pos, g->worms[j].segments[0]);
 			if(whitgl_fvec_sqmagnitude(dist) < 12*12)
 			{
@@ -89,6 +91,7 @@ void game_update(ld29_game* g, whitgl_ivec screen_size)
 	whitgl_fcircle splat = whitgl_fcircle_zero;
 	for(i=0; i<MAX_WORMS; i++)
 	{
+		if(!g->worms[i].alive) continue;
 		splat.pos = g->worms[i].segments[7]; // can't do 0 because it mucks up land_get
 		splat.size = 6;
 		land_splat(g->land, splat);
@@ -158,6 +161,7 @@ void game_do_damage(ld29_game* g, ld29_damage damage)
 			int j;
 			for(i=0; i<MAX_WORMS; i++)
 			{
+				if(!g->worms[i].alive) continue;
 				for(j=g->worms[i].num_segments-1; j>=0; j--)
 				{
 					whitgl_fvec dist = whitgl_fvec_sub(g->worms[i].segments[j], splat.pos);
@@ -217,6 +221,7 @@ void game_draw(const ld29_game* g, whitgl_ivec screen_size)
 	}
 	for(i=0; i<MAX_WORMS; i++)
 	{
+		if(!g->worms[i].alive) continue;
 		worm_draw(g->worms[i], camera_a);
 		worm_draw(g->worms[i], camera_b);
 	}

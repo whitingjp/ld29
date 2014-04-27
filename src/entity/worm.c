@@ -26,15 +26,17 @@ ld29_worm worm_zero(const ld29_land* land)
 	out.vol_current = ld29_worm_volumes_zero;
 	out.vol_target = ld29_worm_volumes_zero;
 	out.air_time = 0;
-	// out.num_segments = WORM_MIN_SEGMENTS*2;
-	out.num_segments = WORM_MAX_SEGMENTS-1;
+	out.num_segments = WORM_MIN_SEGMENTS*2;
 	out.hurt_segment = -1;
 	out.pregnancy = 0;
+	out.alive = false;
 	return out;
 }
 ld29_worm worm_update(ld29_worm in, const ld29_land* land, bool is_player)
 {
 	ld29_worm out = worm_zero(land);
+	if(!in.alive) return out;
+	out.alive = in.alive;
 	out.vol_target = in.vol_target;
 	out.air_time = in.air_time;
 	out.num_segments = in.num_segments;
@@ -189,6 +191,8 @@ ld29_worm worm_update(ld29_worm in, const ld29_land* land, bool is_player)
 }
 void worm_draw(ld29_worm worm, whitgl_ivec camera)
 {
+	if(!worm.alive)
+		return;
 	whitgl_sys_color normal_color = {0xf4, 0xc2, 0xde, 0xff};
 	whitgl_sys_color hurt_color = {0xae, 0xb7, 0x46, 0xff};
 	whitgl_sys_color pregnant_color = {0xf8, 0xaf, 0xb6, 0xff};
