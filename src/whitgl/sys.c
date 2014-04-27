@@ -184,22 +184,31 @@ bool whitgl_sys_init(whitgl_sys_setup* setup)
 	GLFWvidmode desktop;
 	glfwGetDesktopMode( &desktop );
 
-	_pixel_scale = setup->pixel_size;
 	if(setup->fullscreen)
 	{
 		WHITGL_LOG("Opening fullscreen w%d h%d", desktop.Width, desktop.Height);
 		result = glfwOpenWindow( desktop.Width, desktop.Height, desktop.RedBits,
 		                         desktop.GreenBits, desktop.BlueBits, 8, 32, 0,
 		                         GLFW_FULLSCREEN );
-		_pixel_scale = desktop.Width/setup->size.x;
-		setup->size.x = desktop.Width/_pixel_scale;
-		setup->size.y = desktop.Height/_pixel_scale;
+		bool searching = true;
+		setup->pixel_size = desktop.Width/setup->size.x;
+		while(searching)
+		{
+			setup->size.x = desktop.Width/setup->pixel_size;
+			setup->size.y = desktop.Height/setup->pixel_size;
+			searching = false;
+			if(setup->size.x < 320) searching = true;
+			if(setup->size.y < 240) searching = true;
+			if(setup->pixel_size == 1) searching = false;
+			if(searching) setup->pixel_size--;
+		}
 	} else
 	{
-		WHITGL_LOG("Opening windowed w%d h%d", setup->size.x*_pixel_scale, setup->size.y*_pixel_scale);
-		result = glfwOpenWindow( setup->size.x*_pixel_scale, setup->size.y*_pixel_scale,
+		WHITGL_LOG("Opening windowed w%d h%d", setup->size.x*setup->pixel_size, setup->size.y*setup->pixel_size);
+		result = glfwOpenWindow( setup->size.x*setup->pixel_size, setup->size.y*setup->pixel_size,
 		                         0,0,0,0, 0,0, GLFW_WINDOW );
 	}
+	_pixel_scale = setup->pixel_size;
 	WHITGL_LOG("Setting title");
 	glfwSetWindowTitle(setup->name);
 	if(!result)

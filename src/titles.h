@@ -3,6 +3,6 @@
 
 #include <whitgl/math.h>
 
-void titles_draw(whitgl_float transition);
+void titles_draw(whitgl_float transition, whitgl_ivec offset);
 
 #endif // TITLES_H

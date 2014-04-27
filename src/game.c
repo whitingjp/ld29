@@ -132,7 +132,8 @@ void game_update(ld29_game* g, whitgl_ivec screen_size)
 			continue;
 		display_damages[i].timer -= 0.2;
 	}
-	whitgl_float trans_speed = 0.075;
+
+	whitgl_float trans_speed = 0.04;
 	if(!g->worms[g->player].alive)
 		g->transition = whitgl_fmax(g->transition-trans_speed, 0);
 	else
@@ -266,7 +267,9 @@ void game_draw(const ld29_game* g, whitgl_ivec screen_size)
 	_game_display_damages(camera_a);
 	_game_display_damages(camera_b);
 
-	titles_draw(g->transition);
+	whitgl_ivec offset = whitgl_ivec_zero;
+	offset.x = (screen_size.x - 320)/2; offset.y = (screen_size.y - 240)/2;
+	titles_draw(g->transition, offset);
 }
 
 void game_blast()
