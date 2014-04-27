@@ -19,7 +19,7 @@ ld29_worm worm_zero(const ld29_land* land)
 		out.has_ripple[i] = false;
 	}
 	out.speed = whitgl_fvec_zero;
-	out.dir = -whitgl_pi/2;
+	out.dir = whitgl_pi/2;
 	out.boost = 0;
 	out.boost_dir = 0;
 	out.maw_anim = 0;
@@ -37,7 +37,8 @@ ld29_worm worm_zero(const ld29_land* land)
 ld29_worm worm_update(ld29_worm in, const ld29_land* land, bool is_player)
 {
 	ld29_worm out = worm_zero(land);
-	if(!in.alive) return out;
+	if(!in.alive)
+		return out;
 	out.alive = in.alive;
 	out.vol_target = in.vol_target;
 	out.air_time = in.air_time;

@@ -2,6 +2,7 @@
 
 #include <stdlib.h>
 
+#include <whitgl/logging.h>
 #include <whitgl/sound.h>
 #include <whitgl/sys.h>
 
@@ -27,8 +28,11 @@ void game_init(ld29_game* g)
 	land_zero(g->land);
 	for(i=0; i<MAX_WORMS; i++)
 		g->worms[i] = worm_zero(g->land);
-	g->worms[0].alive = true;
+	// g->worms[0].alive = true;
 	g->egg = egg_zero();
+	g->egg.dead = false;
+	g->egg.pos.y = 200;
+	g->egg.hatch = 0.75;
 	whitgl_fvec drill_pos = {whitgl_randint(g->land->size.x), 0};
 	g->drill = driller_zero(drill_pos);
 	for(i=0; i<MAX_DISPLAYED_DAMAGES; i++)
@@ -51,7 +55,7 @@ void game_update(ld29_game* g, whitgl_ivec screen_size)
 	whitgl_set_shader_uniform(WHITGL_SHADER_POST, 0, blast_level);
 	int i;
 	int next_unused_worm = -1;
-	for(i=0; i<MAX_WORMS; i++)
+	for(i=MAX_WORMS-1; i>=0; i--)
 		if(!g->worms[i].alive)
 			next_unused_worm = i;
 	land_update(g->land);
@@ -214,7 +218,10 @@ void _game_display_damages(whitgl_ivec camera)
 
 void game_draw(const ld29_game* g, whitgl_ivec screen_size)
 {
-	whitgl_ivec camera = whitgl_ivec_inverse(whitgl_fvec_to_ivec(g->worms[0].segments[0]));
+	whitgl_fvec target = g->worms[0].segments[0];
+	if(!g->worms[0].alive)
+		target = g->egg.pos;
+	whitgl_ivec camera = whitgl_ivec_inverse(whitgl_fvec_to_ivec(target));
 	camera.x += screen_size.x/2;
 	camera.y += screen_size.y/2;
 	int wrap_dir = 0;
