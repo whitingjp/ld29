@@ -1,9 +1,11 @@
 #include "driller.h"
 
 #include <whitgl/logging.h>
+#include <whitgl/sound.h>
 #include <whitgl/sys.h>
 
 #include <image.h>
+#include <sounds.h>
 
 ld29_driller driller_zero(whitgl_fvec pos)
 {
@@ -57,6 +59,8 @@ ld29_driller driller_update(ld29_driller in, const ld29_land* land)
 			out.speed.y = 0.5;
 		}
 	}
+	if(in.state != DRILLER_PRIMED && out.state == DRILLER_PRIMED)
+		whitgl_sound_play(SOUND_TRIGGER, 0.95+whitgl_randfloat()*0.1);
 	if(in.state == DRILLER_PRIMED)
 		out.beam_charge = in.beam_charge + 2.0/60.0;
 	if(in_land && out.beam_charge > 1)
@@ -64,6 +68,7 @@ ld29_driller driller_update(ld29_driller in, const ld29_land* land)
 		out.beam_charge = 1;
 		out.attack.type = DAMAGE_BLAST;
 		out.attack.pos = out.pos;
+		whitgl_sound_play(SOUND_POP, 0.9+whitgl_randfloat()*0.2);
 	}
 	out.pos = whitgl_fvec_add(in.pos, out.speed);
 	return out;

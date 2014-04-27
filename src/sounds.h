@@ -11,6 +11,8 @@ typedef enum
 	SOUND_EMERGE,
 	SOUND_SHHH,
 	SOUND_SHAAA,
+	SOUND_POP,
+	SOUND_TRIGGER,
 } sound;
 
 #endif // SOUNDS_H

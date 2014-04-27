@@ -38,6 +38,8 @@ int main()
 	whitgl_loop_add(SOUND_EMERGE, "data/emerge.ogg");
 	whitgl_loop_add(SOUND_SHHH, "data/shhh.ogg");
 	whitgl_loop_add(SOUND_SHAAA, "data/shaaa.ogg");
+	whitgl_sound_add(SOUND_POP, "data/pop.ogg");
+	whitgl_sound_add(SOUND_TRIGGER, "data/trigger.ogg");
 
 	game_init(&g);
 
