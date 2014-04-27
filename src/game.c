@@ -2,7 +2,10 @@
 
 #include <stdlib.h>
 
+#include <whitgl/sound.h>
 #include <whitgl/sys.h>
+
+#include <sounds.h>
 
 typedef struct
 {
@@ -61,6 +64,7 @@ void game_update(ld29_game* g)
 		{
 			g->humans[i].alive = false;
 			g->worm.ripple = 0;
+			whitgl_sound_play(whitgl_randint(SOUND_OM3+1), 0.9+whitgl_randfloat()/5);
 		}
 	}
 	if(g->drill.attack.type != DAMAGE_NONE)

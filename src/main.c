@@ -9,6 +9,7 @@
 
 #include <game.h>
 #include <image.h>
+#include <sounds.h>
 
 ld29_game g;
 
@@ -28,9 +29,14 @@ int main()
 
 	whitgl_sys_add_image(IMAGE_SPRITES, "data/sprites.png");
 
+	whitgl_sound_init();
+	whitgl_sound_add(SOUND_OM0, "data/om0.ogg");
+	whitgl_sound_add(SOUND_OM1, "data/om1.ogg");
+	whitgl_sound_add(SOUND_OM2, "data/om2.ogg");
+	whitgl_sound_add(SOUND_OM3, "data/om3.ogg");
+
 	game_init(&g);
 
-	whitgl_sound_init();
 	whitgl_input_init();
 
 	double now = whitgl_sys_get_time();

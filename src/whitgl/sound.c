@@ -64,6 +64,7 @@ void whitgl_sound_add(int id, const char* filename)
 		WHITGL_LOG("ERR Too many sounds");
 		return;
 	}
+	WHITGL_LOG("Adding sound %d", id);
 	sounds[num_sounds].id = id;
 	FMOD_RESULT result = FMOD_System_CreateSound(fmodSystem, filename, FMOD_HARDWARE | FMOD_2D, 0, &sounds[num_sounds].sound);
 	_whitgl_sound_errcheck("FMOD_System_CreateSound", result);
