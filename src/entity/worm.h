@@ -34,7 +34,7 @@ typedef struct
 	whitgl_float pregnancy;
 } ld29_worm;
 ld29_worm worm_zero(const ld29_land* land);
-ld29_worm worm_update(ld29_worm in, const ld29_land* land);
+ld29_worm worm_update(ld29_worm in, const ld29_land* land, bool is_player);
 void worm_draw(ld29_worm w, whitgl_ivec camera);
 
 #endif // WORM_H

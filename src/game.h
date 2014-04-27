@@ -10,7 +10,7 @@
 #include <damage.h>
 
 #define MAX_HUMANS (16)
-#define MAX_WORMS (4)
+#define MAX_WORMS (8)
 typedef struct
 {
 	ld29_worm worms[MAX_WORMS];
@@ -18,6 +18,7 @@ typedef struct
 	ld29_land* land;
 	ld29_driller drill;
 	ld29_human humans[MAX_HUMANS];
+	int player;
 } ld29_game;
 
 void game_init(ld29_game* g);

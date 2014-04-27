@@ -32,7 +32,7 @@ ld29_worm worm_zero(const ld29_land* land)
 	out.pregnancy = 0;
 	return out;
 }
-ld29_worm worm_update(ld29_worm in, const ld29_land* land)
+ld29_worm worm_update(ld29_worm in, const ld29_land* land, bool is_player)
 {
 	ld29_worm out = worm_zero(land);
 	out.vol_target = in.vol_target;
@@ -170,17 +170,20 @@ ld29_worm worm_update(ld29_worm in, const ld29_land* land)
 		out.has_ripple[in.num_segments-1] = false;
 	}
 
-	out.vol_current.ground = (in.vol_current.ground*4 + out.vol_target.ground)/5;
-	whitgl_loop_volume(SOUND_GROUND, out.vol_current.ground);
-	if(out.vol_target.emerge > in.vol_current.emerge)
-		out.vol_current.emerge = (in.vol_current.emerge + out.vol_target.emerge)/2;
-	else
-		out.vol_current.emerge = (in.vol_current.emerge*14 + out.vol_target.emerge)/15;
-	whitgl_loop_volume(SOUND_EMERGE, out.vol_current.emerge);
-	out.vol_current.shhh = (in.vol_current.shhh*9 + out.vol_target.shhh)/10;
-	whitgl_loop_volume(SOUND_SHHH, out.vol_current.shhh);
-	out.vol_current.shaaa = (in.vol_current.shaaa*9 + out.vol_target.shaaa)/10;
-	whitgl_loop_volume(SOUND_SHAAA, out.vol_current.shaaa);
+	if(is_player)
+	{
+		out.vol_current.ground = (in.vol_current.ground*4 + out.vol_target.ground)/5;
+		whitgl_loop_volume(SOUND_GROUND, out.vol_current.ground);
+		if(out.vol_target.emerge > in.vol_current.emerge)
+			out.vol_current.emerge = (in.vol_current.emerge + out.vol_target.emerge)/2;
+		else
+			out.vol_current.emerge = (in.vol_current.emerge*14 + out.vol_target.emerge)/15;
+		whitgl_loop_volume(SOUND_EMERGE, out.vol_current.emerge);
+		out.vol_current.shhh = (in.vol_current.shhh*9 + out.vol_target.shhh)/10;
+		whitgl_loop_volume(SOUND_SHHH, out.vol_current.shhh);
+		out.vol_current.shaaa = (in.vol_current.shaaa*9 + out.vol_target.shaaa)/10;
+		whitgl_loop_volume(SOUND_SHAAA, out.vol_current.shaaa);
+	}
 
 	return out;
 }

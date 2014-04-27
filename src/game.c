@@ -34,6 +34,7 @@ void game_init(ld29_game* g)
 		whitgl_fvec human_pos = {whitgl_randint(g->land->size.x), 0};
 		g->humans[i] = human_zero(human_pos);
 	}
+	g->player = 0;
 }
 void game_shutdown(ld29_game* g)
 {
@@ -42,12 +43,11 @@ void game_shutdown(ld29_game* g)
 }
 void game_update(ld29_game* g, whitgl_ivec screen_size)
 {
-	int player = 0;
 	int i;
 	land_update(g->land);
 	for(i=0; i<MAX_WORMS; i++)
 	{
-		g->worms[i] = worm_update(g->worms[i], g->land);
+		g->worms[i] = worm_update(g->worms[i], g->land, i==g->player);
 		if(g->worms[i].pregnancy == -1)
 		{
 			g->egg = egg_zero();
@@ -57,7 +57,7 @@ void game_update(ld29_game* g, whitgl_ivec screen_size)
 		}
 	}
 	g->egg = egg_update(g->egg, g->land);
-	g->drill = driller_update(g->drill, g->land, g->worms[player].segments[0], whitgl_ivec_to_fvec(screen_size));
+	g->drill = driller_update(g->drill, g->land, g->worms[g->player].segments[0], whitgl_ivec_to_fvec(screen_size));
 	for(i=0; i<MAX_HUMANS; i++)
 		g->humans[i] = human_update(g->humans[i], g->land);
 	for(i=0; i<MAX_HUMANS; i++)
@@ -75,7 +75,8 @@ void game_update(ld29_game* g, whitgl_ivec screen_size)
 			{
 				g->humans[i].alive = false;
 				g->worms[j].has_ripple[0] = true;
-				whitgl_sound_play(whitgl_randint(SOUND_OM3+1), 0.9+whitgl_randfloat()/5);
+				if(j==g->player)
+					whitgl_sound_play(whitgl_randint(SOUND_OM3+1), 0.9+whitgl_randfloat()/5);
 			}
 		}
 	}
