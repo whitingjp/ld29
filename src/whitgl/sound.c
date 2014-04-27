@@ -11,6 +11,7 @@ typedef struct
 {
 	int id;
 	FMOD_SOUND* sound;
+	FMOD_CHANNEL* channel;
 } whitgl_sound;
 #define WHITGL_SOUND_MAX (64)
 whitgl_sound sounds[WHITGL_SOUND_MAX];
@@ -64,7 +65,6 @@ void whitgl_sound_add(int id, const char* filename)
 		WHITGL_LOG("ERR Too many sounds");
 		return;
 	}
-	WHITGL_LOG("Adding sound %d", id);
 	sounds[num_sounds].id = id;
 	FMOD_RESULT result = FMOD_System_CreateSound(fmodSystem, filename, FMOD_HARDWARE | FMOD_2D, 0, &sounds[num_sounds].sound);
 	_whitgl_sound_errcheck("FMOD_System_CreateSound", result);
@@ -88,15 +88,52 @@ void whitgl_sound_play(int id, float adjust)
 		return;
 	}
 
-	FMOD_CHANNEL *channel;
-	FMOD_RESULT result = FMOD_System_PlaySound(fmodSystem, FMOD_CHANNEL_FREE, sounds[index].sound, true, &channel);
+	FMOD_RESULT result = FMOD_System_PlaySound(fmodSystem, FMOD_CHANNEL_FREE, sounds[index].sound, true, &sounds[index].channel);
 	_whitgl_sound_errcheck("FMOD_System_PlaySound", result);
 
 	float defaultFrequency;
 	result = FMOD_Sound_GetDefaults(sounds[index].sound, &defaultFrequency, NULL, NULL, NULL);
 	_whitgl_sound_errcheck("FMOD_Sound_GetDefaults", result);
-	result = FMOD_Channel_SetFrequency(channel, defaultFrequency*adjust);
+	result = FMOD_Channel_SetFrequency(sounds[index].channel, defaultFrequency*adjust);
 	_whitgl_sound_errcheck("FMOD_Channel_SetFrequency", result);
-	result = FMOD_Channel_SetPaused(channel, false);
+	result = FMOD_Channel_SetPaused(sounds[index].channel, false);
 	_whitgl_sound_errcheck("FMOD_Channel_SetPaused", result);
+}
+
+void whitgl_loop_add(int id, const char* filename)
+{
+	if(num_sounds >= WHITGL_SOUND_MAX)
+	{
+		WHITGL_LOG("ERR Too many sounds");
+		return;
+	}
+	sounds[num_sounds].id = id;
+	FMOD_RESULT result = FMOD_System_CreateSound(fmodSystem, filename, FMOD_HARDWARE | FMOD_2D, 0, &sounds[num_sounds].sound);
+	_whitgl_sound_errcheck("FMOD_System_CreateSound", result);
+
+	result = FMOD_System_PlaySound(fmodSystem, FMOD_CHANNEL_FREE, sounds[num_sounds].sound, false, &sounds[num_sounds].channel);
+	_whitgl_sound_errcheck("FMOD_System_PlaySound", result);
+
+	num_sounds++;
+}
+void whitgl_loop_volume(int id, float volume)
+{
+	int index = -1;
+	int i;
+	for(i=0; i<num_sounds; i++)
+	{
+		if(sounds[i].id == id)
+		{
+			index = i;
+			continue;
+		}
+	}
+	if(index == -1)
+	{
+		WHITGL_LOG("ERR Cannot find sound %d", id);
+		return;
+	}
+
+	FMOD_RESULT result = FMOD_Channel_SetVolume(sounds[index].channel, volume);
+	_whitgl_sound_errcheck("FMOD_Channel_SetVolume", result);
 }
