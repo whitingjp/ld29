@@ -12,7 +12,7 @@ void game_init(ld29_game* g)
 	splat.pos = g->egg.pos;
 	splat.size = 20;
 	land_splat(g->land, splat);
-	whitgl_fvec drill_pos = {g->land->size.x/2-25, 0};
+	whitgl_fvec drill_pos = {whitgl_randint(g->land->size.x), 0};
 	g->drill = driller_zero(drill_pos);
 }
 void game_shutdown(ld29_game* g)
@@ -29,7 +29,7 @@ void game_update(ld29_game* g)
 	if(g->drill.attack.type != DAMAGE_NONE)
 	{
 		game_do_damage(g, g->drill.attack);
-		whitgl_fvec drill_pos = {g->land->size.x/2-25, 0};
+		whitgl_fvec drill_pos = {whitgl_randint(g->land->size.x), 0};
 		g->drill = driller_zero(drill_pos);
 	}
 	whitgl_fcircle splat = whitgl_fcircle_zero;

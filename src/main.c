@@ -37,6 +37,8 @@ int main()
 	double then = now;
 	double update_time = 0;
 
+	whitgl_randseed(now);
+
 	bool running = true;
 	while(running)
 	{
