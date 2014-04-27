@@ -47,7 +47,7 @@ int main()
 	setup.size.x = 320;
 	setup.size.y = 240;
 	setup.pixel_size = 2;
-	setup.fullscreen = false;
+	setup.fullscreen = true;
 
 	if(!whitgl_sys_init(&setup))
 		return 1;
