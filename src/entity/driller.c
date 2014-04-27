@@ -4,6 +4,7 @@
 #include <whitgl/sound.h>
 #include <whitgl/sys.h>
 
+#include <game.h>
 #include <image.h>
 #include <sounds.h>
 
@@ -74,12 +75,16 @@ ld29_driller driller_update(ld29_driller in, const ld29_land* land, whitgl_fvec 
 		whitgl_sound_play(SOUND_TRIGGER, 0.95+whitgl_randfloat()*0.1);
 	if(in.state == DRILLER_PRIMED)
 		out.beam_charge = whitgl_fmin(1, in.beam_charge + 2.0/60.0);
-	if(in_land && out.beam_charge >= 1 && on_screen)
+	if(in_land && out.beam_charge >= 1)
 	{
 		out.beam_charge = 1;
 		out.attack.type = DAMAGE_BLAST;
 		out.attack.pos = out.pos;
-		whitgl_sound_play(SOUND_POP, 0.9+whitgl_randfloat()*0.2);
+		if(on_screen)
+		{
+			whitgl_sound_play(SOUND_POP, 0.9+whitgl_randfloat()*0.2);
+			game_blast();
+		}
 	}
 	out.pos = whitgl_fvec_add(in.pos, out.speed);
 

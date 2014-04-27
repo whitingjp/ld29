@@ -14,11 +14,14 @@ typedef struct
 } ld29_damage_display;
 ld29_damage_display ld29_damage_display_zero = {0, { {0,0}, 0}};
 
+float blast_level;
+
 #define MAX_DISPLAYED_DAMAGES (128)
 ld29_damage_display display_damages[MAX_DISPLAYED_DAMAGES];
 
 void game_init(ld29_game* g)
 {
+	blast_level = 0;
 	int i;
 	g->land = malloc(sizeof(ld29_land));
 	land_zero(g->land);
@@ -44,6 +47,8 @@ void game_shutdown(ld29_game* g)
 }
 void game_update(ld29_game* g, whitgl_ivec screen_size)
 {
+	blast_level = whitgl_fmax(0, blast_level-0.3);
+	whitgl_set_shader_uniform(WHITGL_SHADER_POST, 0, blast_level);
 	int i;
 	int next_unused_worm = -1;
 	for(i=0; i<MAX_WORMS; i++)
@@ -246,4 +251,9 @@ void game_draw(const ld29_game* g, whitgl_ivec screen_size)
 	driller_draw(g->drill, camera_b);
 	_game_display_damages(camera_a);
 	_game_display_damages(camera_b);
+}
+
+void game_blast()
+{
+	blast_level = 1;
 }

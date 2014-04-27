@@ -19,6 +19,7 @@ const char* fragment_src = "\
 in vec2 Texturepos;\
 out vec4 outColor;\
 uniform sampler2D tex;\
+uniform float blast;\
 void main()\
 {\
 	float off = 0.01;\
@@ -33,6 +34,7 @@ void main()\
 	outColor = texture( tex, Texturepos )+northt/8.0+eastt/8.0+southt/8.0+westt/8.0;\
 	float dim = (1-Texturepos.y)/4;\
 	outColor -= vec4(dim, dim*0.5, dim*0.8, 0);\
+	outColor += vec4(blast, blast, blast*0.7, 0);\
 }\
 ";
 
@@ -70,6 +72,8 @@ int main()
 
 	whitgl_shader shader = whitgl_shader_zero;
 	shader.fragment_src = fragment_src;
+	shader.num_uniforms = 1;
+	shader.uniforms[0] = "blast";
 	whitgl_change_shader(WHITGL_SHADER_POST, shader);
 
 	WHITGL_LOG("Game init");
