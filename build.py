@@ -86,6 +86,8 @@ n.newline()
 if(plat == 'Windows'):
   targets += n.build(joinp(outdir, 'fmodex.dll'), 'cp', joinp(inputdir, 'fmod', 'fmodex.dll'))
   targets += n.build(joinp(outdir, 'glew32.dll'), 'cp', joinp(inputdir, 'glew', 'lib', 'glew32.dll'))
+  targets += n.build(joinp(outdir, 'run_windowed.bat'), 'cp', joinp('windows', 'run_windowed.bat'))
+  targets += n.build(joinp(outdir, 'run_fullscreen.bat'), 'cp', joinp('windows', 'run_fullscreen.bat'))
 else:
   targets += n.build(joinp(outdir, 'libfmodex-4.44.15.so'), 'cp', joinp(inputdir, 'fmod', 'linux', 'lib', 'libfmodex-4.44.15.so'))
 n.newline()
