@@ -24,9 +24,9 @@ ld29_driller driller_update(ld29_driller in, const ld29_land* land, whitgl_fvec 
 {
 	whitgl_fvec speaker_diff = whitgl_fvec_sub(in.pos, speaker_pos);
 	bool on_screen = true;
-	if(speaker_diff.x > screen_size.x/2 || speaker_diff.x < -screen_size.x/2)
+	if(speaker_diff.x > screen_size.x/2+50 || speaker_diff.x < -screen_size.x/2-50)
 		on_screen = false;
-	if(speaker_diff.y > screen_size.y/2 || speaker_diff.y < -screen_size.y/2)
+	if(speaker_diff.y > screen_size.y/2+50 || speaker_diff.y < -screen_size.y/2-50)
 		on_screen = false;
 
 	ld29_driller out = driller_zero(in.pos);
