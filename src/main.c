@@ -80,6 +80,9 @@ int main()
 	shader.uniforms[1] = "throb";
 	whitgl_change_shader(WHITGL_SHADER_POST, shader);
 
+	WHITGL_LOG("RNG init");
+	whitgl_randseed(whitgl_sys_get_time()*1000);
+
 	WHITGL_LOG("Game init");
 	game_init(&g);
 
@@ -90,8 +93,6 @@ int main()
 	double then = now;
 	double update_time = 0;
 
-	WHITGL_LOG("RNG init");
-	whitgl_randseed(now);
 
 	WHITGL_LOG("Running game.");
 	bool running = true;
