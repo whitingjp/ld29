@@ -142,7 +142,10 @@ ld29_worm worm_update(ld29_worm in, const ld29_land* land)
 		if((int)(in.pregnancy*steps) != (int)(out.pregnancy*steps))
 			out.num_segments--;
 		if(out.pregnancy >= 1)
-			out.pregnancy = 0;
+		{
+			out.pregnancy = -1;
+			whitgl_sound_play(SOUND_ITS_AN_EGG, 1);
+		}
 	}
 
 	out.segments[0] = whitgl_fvec_add(in.segments[0], out.speed);

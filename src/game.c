@@ -22,7 +22,7 @@ void game_init(ld29_game* g)
 	g->land = malloc(sizeof(ld29_land));
 	land_zero(g->land);
 	g->worm = worm_zero(g->land);
-	g->egg = egg_zero(g->land);
+	g->egg = egg_zero();
 	whitgl_fvec drill_pos = {whitgl_randint(g->land->size.x), 0};
 	g->drill = driller_zero(drill_pos);
 	int i;
@@ -44,6 +44,13 @@ void game_update(ld29_game* g, whitgl_ivec screen_size)
 	int i;
 	land_update(g->land);
 	g->worm = worm_update(g->worm, g->land);
+	if(g->worm.pregnancy == -1)
+	{
+		g->egg = egg_zero();
+		g->egg.dead = false;
+		g->egg.pos = g->worm.segments[g->worm.num_segments-1];
+		g->worm.pregnancy = 0;
+	}
 	g->egg = egg_update(g->egg, g->land);
 	g->drill = driller_update(g->drill, g->land, g->worm.segments[0], whitgl_ivec_to_fvec(screen_size));
 	for(i=0; i<MAX_HUMANS; i++)

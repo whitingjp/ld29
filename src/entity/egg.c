@@ -4,13 +4,10 @@
 
 #include <image.h>
 
-ld29_egg egg_zero(const ld29_land* land)
+ld29_egg egg_zero()
 {
 	ld29_egg out;
-	whitgl_fvec start = whitgl_fvec_zero;
-	start.x = land->size.x/2-50;
-	start.y = land->size.y-150;
-	out.pos = start;
+	out.pos = whitgl_fvec_zero;
 	out.speed = whitgl_fvec_zero;
 	out.dead = true;
 	return out;
@@ -20,6 +17,7 @@ ld29_egg egg_update(ld29_egg in, const ld29_land* land)
 	if(in.dead)
 		return in;
 	ld29_egg out = egg_zero(land);
+	out.dead = false;
 	out.speed = in.speed;
 	if(land_get(land, whitgl_fvec_to_ivec(in.pos)) == LAND_GROUND)
 	{
