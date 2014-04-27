@@ -10,9 +10,10 @@
 #include <damage.h>
 
 #define MAX_HUMANS (16)
+#define MAX_WORMS (4)
 typedef struct
 {
-	ld29_worm worm;
+	ld29_worm worms[MAX_WORMS];
 	ld29_egg egg;
 	ld29_land* land;
 	ld29_driller drill;

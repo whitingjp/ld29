@@ -19,13 +19,14 @@ ld29_damage_display display_damages[MAX_DISPLAYED_DAMAGES];
 
 void game_init(ld29_game* g)
 {
+	int i;
 	g->land = malloc(sizeof(ld29_land));
 	land_zero(g->land);
-	g->worm = worm_zero(g->land);
+	for(i=0; i<MAX_WORMS; i++)
+		g->worms[i] = worm_zero(g->land);
 	g->egg = egg_zero();
 	whitgl_fvec drill_pos = {whitgl_randint(g->land->size.x), 0};
 	g->drill = driller_zero(drill_pos);
-	int i;
 	for(i=0; i<MAX_DISPLAYED_DAMAGES; i++)
 		display_damages[i] = ld29_damage_display_zero;
 	for(i=0; i<MAX_HUMANS; i++)
@@ -41,18 +42,22 @@ void game_shutdown(ld29_game* g)
 }
 void game_update(ld29_game* g, whitgl_ivec screen_size)
 {
+	int player = 0;
 	int i;
 	land_update(g->land);
-	g->worm = worm_update(g->worm, g->land);
-	if(g->worm.pregnancy == -1)
+	for(i=0; i<MAX_WORMS; i++)
 	{
-		g->egg = egg_zero();
-		g->egg.dead = false;
-		g->egg.pos = g->worm.segments[g->worm.num_segments-1];
-		g->worm.pregnancy = 0;
+		g->worms[i] = worm_update(g->worms[i], g->land);
+		if(g->worms[i].pregnancy == -1)
+		{
+			g->egg = egg_zero();
+			g->egg.dead = false;
+			g->egg.pos = g->worms[i].segments[g->worms[i].num_segments-1];
+			g->worms[i].pregnancy = 0;
+		}
 	}
 	g->egg = egg_update(g->egg, g->land);
-	g->drill = driller_update(g->drill, g->land, g->worm.segments[0], whitgl_ivec_to_fvec(screen_size));
+	g->drill = driller_update(g->drill, g->land, g->worms[player].segments[0], whitgl_ivec_to_fvec(screen_size));
 	for(i=0; i<MAX_HUMANS; i++)
 		g->humans[i] = human_update(g->humans[i], g->land);
 	for(i=0; i<MAX_HUMANS; i++)
@@ -62,12 +67,16 @@ void game_update(ld29_game* g, whitgl_ivec screen_size)
 			whitgl_fvec human_pos = {whitgl_randint(g->land->size.x), 0};
 			g->humans[i] = human_zero(human_pos);
 		}
-		whitgl_fvec dist = whitgl_fvec_sub(g->humans[i].pos, g->worm.segments[0]);
-		if(whitgl_fvec_sqmagnitude(dist) < 12*12)
+		int j;
+		for(j=0; j<MAX_WORMS; j++)
 		{
-			g->humans[i].alive = false;
-			g->worm.has_ripple[0] = true;
-			whitgl_sound_play(whitgl_randint(SOUND_OM3+1), 0.9+whitgl_randfloat()/5);
+			whitgl_fvec dist = whitgl_fvec_sub(g->humans[i].pos, g->worms[j].segments[0]);
+			if(whitgl_fvec_sqmagnitude(dist) < 12*12)
+			{
+				g->humans[i].alive = false;
+				g->worms[j].has_ripple[0] = true;
+				whitgl_sound_play(whitgl_randint(SOUND_OM3+1), 0.9+whitgl_randfloat()/5);
+			}
 		}
 	}
 	if(g->drill.attack.type != DAMAGE_NONE)
@@ -77,9 +86,12 @@ void game_update(ld29_game* g, whitgl_ivec screen_size)
 		g->drill = driller_zero(drill_pos);
 	}
 	whitgl_fcircle splat = whitgl_fcircle_zero;
-	splat.pos = g->worm.segments[7]; // can't do 0 because it mucks up land_get
-	splat.size = 6;
-	land_splat(g->land, splat);
+	for(i=0; i<MAX_WORMS; i++)
+	{
+		splat.pos = g->worms[i].segments[7]; // can't do 0 because it mucks up land_get
+		splat.size = 6;
+		land_splat(g->land, splat);
+	}
 	splat.pos = g->drill.pos;
 	splat.size = 2;
 	land_splat(g->land, splat);
@@ -142,11 +154,15 @@ void game_do_damage(ld29_game* g, ld29_damage damage)
 				if(whitgl_fvec_sqmagnitude(dist) < splat.size*splat.size)
 					g->humans[i].alive = false;
 			}
-			for(i=g->worm.num_segments-1; i>=0; i--)
+			int j;
+			for(i=0; i<MAX_WORMS; i++)
 			{
-				whitgl_fvec dist = whitgl_fvec_sub(g->worm.segments[i], splat.pos);
-				if(whitgl_fvec_sqmagnitude(dist) < splat.size*splat.size)
-					g->worm.hurt_segment = i;
+				for(j=g->worms[i].num_segments-1; j>=0; j--)
+				{
+					whitgl_fvec dist = whitgl_fvec_sub(g->worms[i].segments[j], splat.pos);
+					if(whitgl_fvec_sqmagnitude(dist) < splat.size*splat.size)
+						g->worms[i].hurt_segment = j;
+				}
 			}
 			break;
 		}
@@ -173,7 +189,7 @@ void _game_display_damages(whitgl_ivec camera)
 
 void game_draw(const ld29_game* g, whitgl_ivec screen_size)
 {
-	whitgl_ivec camera = whitgl_ivec_inverse(whitgl_fvec_to_ivec(g->worm.segments[0]));
+	whitgl_ivec camera = whitgl_ivec_inverse(whitgl_fvec_to_ivec(g->worms[0].segments[0]));
 	camera.x += screen_size.x/2;
 	camera.y += screen_size.y/2;
 	int wrap_dir = 0;
@@ -198,8 +214,11 @@ void game_draw(const ld29_game* g, whitgl_ivec screen_size)
 		human_draw(g->humans[i], camera_a);
 		human_draw(g->humans[i], camera_b);
 	}
-	worm_draw(g->worm, camera_a);
-	worm_draw(g->worm, camera_b);
+	for(i=0; i<MAX_WORMS; i++)
+	{
+		worm_draw(g->worms[i], camera_a);
+		worm_draw(g->worms[i], camera_b);
+	}
 	egg_draw(g->egg, camera_a);
 	egg_draw(g->egg, camera_b);
 	driller_draw(g->drill, camera_a);

@@ -10,7 +10,7 @@ ld29_worm worm_zero(const ld29_land* land)
 {
 	ld29_worm out;
 	whitgl_fvec start = whitgl_fvec_zero;
-	start.x = land->size.x/2+50;
+	start.x = whitgl_randint(land->size.x);
 	start.y = land->size.y-50;
 	int i;
 	for(i=0; i<WORM_MAX_SEGMENTS; i++)
