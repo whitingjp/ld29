@@ -2,6 +2,18 @@
 
 #include <stdlib.h>
 
+#include <whitgl/sys.h>
+
+typedef struct
+{
+	whitgl_float timer;
+	whitgl_fcircle circle;
+} ld29_damage_display;
+ld29_damage_display ld29_damage_display_zero = {0, { {0,0}, 0}};
+
+#define MAX_DISPLAYED_DAMAGES (128)
+ld29_damage_display display_damages[MAX_DISPLAYED_DAMAGES];
+
 void game_init(ld29_game* g)
 {
 	g->land = malloc(sizeof(ld29_land));
@@ -14,6 +26,9 @@ void game_init(ld29_game* g)
 	land_splat(g->land, splat);
 	whitgl_fvec drill_pos = {whitgl_randint(g->land->size.x), 0};
 	g->drill = driller_zero(drill_pos);
+	int i;
+	for(i=0; i<MAX_DISPLAYED_DAMAGES; i++)
+		display_damages[i] = ld29_damage_display_zero;
 }
 void game_shutdown(ld29_game* g)
 {
@@ -39,6 +54,27 @@ void game_update(ld29_game* g)
 	splat.pos = g->drill.pos;
 	splat.size = 2;
 	land_splat(g->land, splat);
+
+	int i;
+	for(i=0; i<MAX_DISPLAYED_DAMAGES; i++)
+	{
+		if(display_damages[i].timer <= 0)
+			continue;
+		display_damages[i].timer -= 0.2;
+	}
+}
+
+void _game_add_display_damage(whitgl_fcircle circle)
+{
+	int i;
+	for(i=0; i<MAX_DISPLAYED_DAMAGES; i++)
+	{
+		if(display_damages[i].timer > 0)
+			continue;
+		display_damages[i].circle = circle;
+		display_damages[i].timer = 1;
+		return;
+	}
 }
 void game_do_damage(ld29_game* g, ld29_damage damage)
 {
@@ -69,12 +105,30 @@ void game_do_damage(ld29_game* g, ld29_damage damage)
 			splat.pos = damage.pos;
 			splat.size = 50;
 			land_splat(g->land, splat);
+			_game_add_display_damage(splat);
 			break;
 		}
 		default: break;
 	}
 
 }
+
+void _game_display_damages(whitgl_ivec camera)
+{
+	int i;
+	for(i=0; i<MAX_DISPLAYED_DAMAGES; i++)
+	{
+		if(display_damages[i].timer < 0)
+			continue;
+		whitgl_sys_color yellow_color = {0xed, 0xc7, 0x31, 0xff};
+		whitgl_sys_color white_color = {0xf4, 0xc2, 0xde, 0xff};
+		whitgl_sys_color col = display_damages[i].timer > 0.6 ? white_color : yellow_color;
+		whitgl_fcircle draw_circle = display_damages[i].circle;
+		draw_circle.pos = whitgl_fvec_add(draw_circle.pos, whitgl_ivec_to_fvec(camera));
+		whitgl_sys_draw_fcircle(draw_circle, col, 32);
+	}
+}
+
 void game_draw(const ld29_game* g, whitgl_ivec screen_size)
 {
 	whitgl_ivec camera = whitgl_ivec_inverse(whitgl_fvec_to_ivec(g->worm.segments[0]));
@@ -96,6 +150,7 @@ void game_draw(const ld29_game* g, whitgl_ivec screen_size)
 	worm_draw(g->worm, camera);
 	egg_draw(g->egg, camera);
 	driller_draw(g->drill, camera);
+	_game_display_damages(camera);
 
 	camera.x -= g->land->size.x*wrap_dir;
 
@@ -103,4 +158,5 @@ void game_draw(const ld29_game* g, whitgl_ivec screen_size)
 	worm_draw(g->worm, camera);
 	egg_draw(g->egg, camera);
 	driller_draw(g->drill, camera);
+	_game_display_damages(camera);
 }
