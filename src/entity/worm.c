@@ -183,7 +183,7 @@ ld29_worm worm_update(ld29_worm in, const ld29_land* land, bool is_player)
 		out.has_ripple[i+1] = in.has_ripple[i];
 	if(out.has_ripple[in.num_segments-1])
 	{
-		out.num_segments = whitgl_imin(WORM_MAX_SEGMENTS, out.num_segments+3);
+		out.num_segments = whitgl_imin(WORM_MAX_SEGMENTS, out.num_segments+5);
 		out.has_ripple[in.num_segments-1] = false;
 	}
 
