@@ -101,6 +101,7 @@ void _game_add_display_damage(whitgl_fcircle circle)
 		return;
 	}
 }
+
 void game_do_damage(ld29_game* g, ld29_damage damage)
 {
 	switch(damage.type)
@@ -131,6 +132,13 @@ void game_do_damage(ld29_game* g, ld29_damage damage)
 			splat.size = 50;
 			land_splat(g->land, splat);
 			_game_add_display_damage(splat);
+			int i;
+			for(i=0; i<MAX_HUMANS; i++)
+			{
+				whitgl_fvec dist = whitgl_fvec_sub(g->humans[i].pos, splat.pos);
+				if(whitgl_fvec_sqmagnitude(dist) < splat.size*splat.size)
+					g->humans[i].alive = false;
+			}
 			break;
 		}
 		default: break;
