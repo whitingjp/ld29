@@ -249,8 +249,8 @@ void game_draw(const ld29_game* g, whitgl_ivec screen_size)
 	for(i=0; i<MAX_WORMS; i++)
 	{
 		if(!g->worms[i].alive) continue;
-		worm_draw(g->worms[i], camera_a);
-		worm_draw(g->worms[i], camera_b);
+		worm_draw(g->worms[i], i==g->player, camera_a);
+		worm_draw(g->worms[i], i==g->player, camera_b);
 	}
 	egg_draw(g->egg, camera_a);
 	egg_draw(g->egg, camera_b);

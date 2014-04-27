@@ -204,11 +204,17 @@ ld29_worm worm_update(ld29_worm in, const ld29_land* land, bool is_player, bool 
 
 	return out;
 }
-void worm_draw(ld29_worm worm, whitgl_ivec camera)
+void worm_draw(ld29_worm worm, bool is_player, whitgl_ivec camera)
 {
 	if(!worm.alive)
 		return;
 	whitgl_sys_color normal_color = {0xf4, 0xc2, 0xde, 0xff};
+	if(!is_player)
+	{
+		normal_color.r = 0xf3;
+		normal_color.g = 0xb2;
+		normal_color.b = 0x8f;
+	}
 	whitgl_sys_color hurt_color = {0xae, 0xb7, 0x46, 0xff};
 	whitgl_sys_color pregnant_color = {0xf8, 0xaf, 0xb6, 0xff};
 	int i;

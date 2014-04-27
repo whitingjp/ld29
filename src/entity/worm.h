@@ -47,7 +47,7 @@ typedef struct
 } ld29_worm;
 ld29_worm worm_zero(const ld29_land* land);
 ld29_worm worm_update(ld29_worm in, const ld29_land* land, bool is_player, bool broody);
-void worm_draw(ld29_worm w, whitgl_ivec camera);
+void worm_draw(ld29_worm w, bool is_player, whitgl_ivec camera);
 
 ld29_worm_ai worm_ai_update(ld29_worm_ai in, const ld29_worm* worm, const ld29_land* land);
 
