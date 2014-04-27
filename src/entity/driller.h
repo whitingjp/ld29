@@ -19,6 +19,7 @@ typedef struct
 	whitgl_fvec pos;
 	whitgl_fvec speed;
 	float drill_timer;
+	float drill_volume;
 	float beam_charge;
 	ld29_damage attack;
 	ld29_driller_state state;

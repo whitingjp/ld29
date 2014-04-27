@@ -16,6 +16,7 @@ ld29_driller driller_zero(whitgl_fvec pos)
 	out.beam_charge = 0;
 	out.attack = damage_zero;
 	out.state = DRILLER_LANDING;
+	out.drill_volume = 0;
 	return out;
 }
 ld29_driller driller_update(ld29_driller in, const ld29_land* land)
@@ -47,7 +48,10 @@ ld29_driller driller_update(ld29_driller in, const ld29_land* land)
 		if(entered_space && in.state == DRILLER_DRILLING) out.state = DRILLER_PRIMED;
 	}
 	if(in_land && in.state == DRILLER_LANDING)
+	{
 		out.state = DRILLER_DRILLING;
+
+	}
 	if(in_land && in.beam_charge == 0)
 	{
 		if(land_type == LAND_BEDROCK)
@@ -71,6 +75,12 @@ ld29_driller driller_update(ld29_driller in, const ld29_land* land)
 		whitgl_sound_play(SOUND_POP, 0.9+whitgl_randfloat()*0.2);
 	}
 	out.pos = whitgl_fvec_add(in.pos, out.speed);
+
+	float target_drill_volume = 0;
+	if(out.state == DRILLER_DRILLING)
+		target_drill_volume = 1;
+	out.drill_volume = (target_drill_volume+in.drill_volume*4)/5;
+	whitgl_loop_volume(SOUND_DRILL, out.drill_volume);
 	return out;
 }
 void driller_draw(ld29_driller driller, whitgl_ivec camera)

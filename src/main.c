@@ -40,6 +40,7 @@ int main()
 	whitgl_loop_add(SOUND_SHAAA, "data/shaaa.ogg");
 	whitgl_sound_add(SOUND_POP, "data/pop.ogg");
 	whitgl_sound_add(SOUND_TRIGGER, "data/trigger.ogg");
+	whitgl_loop_add(SOUND_DRILL, "data/drill.ogg");
 
 	game_init(&g);
 
