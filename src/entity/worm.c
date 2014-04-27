@@ -14,13 +14,15 @@ ld29_worm worm_zero(const ld29_land* land)
 	start.y = land->size.y-50;
 	int i;
 	for(i=0; i<WORM_MAX_SEGMENTS; i++)
+	{
 		out.segments[i] = start;
+		out.has_ripple[i] = false;
+	}
 	out.speed = whitgl_fvec_zero;
 	out.dir = -whitgl_pi/2;
 	out.boost = 0;
 	out.boost_dir = 0;
 	out.maw_anim = 0;
-	out.ripple = -1;
 	out.vol_current = ld29_worm_volumes_zero;
 	out.vol_target = ld29_worm_volumes_zero;
 	out.air_time = 0;
@@ -131,16 +133,12 @@ ld29_worm worm_update(ld29_worm in, const ld29_land* land)
 		if(!in_land) out.maw_anim = 0;
 	}
 
-	out.ripple = in.ripple;
-	if(out.ripple != -1)
+	for(i=0; i<in.num_segments-1; i++)
+		out.has_ripple[i+1] = in.has_ripple[i];
+	if(out.has_ripple[in.num_segments-1])
 	{
-		out.ripple++;
-		if(out.ripple >= in.num_segments)
-		{
-			if(out.num_segments < WORM_MAX_SEGMENTS)
-				out.num_segments += 3;
-			out.ripple = -1;
-		}
+		out.num_segments = whitgl_imin(WORM_MAX_SEGMENTS, out.num_segments+3);
+		out.has_ripple[in.num_segments-1] = false;
 	}
 
 	out.vol_current.ground = (in.vol_current.ground*4 + out.vol_target.ground)/5;
@@ -168,7 +166,7 @@ void worm_draw(ld29_worm worm, whitgl_ivec camera)
 		float ratio = ((float)worm.num_segments-i)/worm.num_segments;
 		c.size = (whitgl_float)ratio*6;
 		if(i%4==0) c.size *= 1.25;
-		if(i==worm.ripple) c.size *= 1.5;
+		if(worm.has_ripple[i]) c.size *= 1.5;
 		whitgl_sys_draw_fcircle(c, color, 16);
 	}
 	// maw

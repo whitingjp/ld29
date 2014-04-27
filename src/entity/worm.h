@@ -5,7 +5,7 @@
 
 #include <entity/land.h>
 
-#define WORM_MAX_SEGMENTS (256)
+#define WORM_MAX_SEGMENTS (128)
 
 typedef struct
 {
@@ -19,12 +19,12 @@ static const ld29_worm_volumes ld29_worm_volumes_zero = {0,0,0,0};
 typedef struct
 {
 	whitgl_fvec segments[WORM_MAX_SEGMENTS];
+	bool has_ripple[WORM_MAX_SEGMENTS];
 	whitgl_fvec speed;
 	whitgl_float dir;
 	whitgl_float boost;
 	whitgl_float boost_dir;
 	whitgl_float maw_anim;
-	whitgl_int ripple;
 	ld29_worm_volumes vol_current;
 	ld29_worm_volumes vol_target;
 	whitgl_int air_time;

@@ -63,7 +63,7 @@ void game_update(ld29_game* g, whitgl_ivec screen_size)
 		if(whitgl_fvec_sqmagnitude(dist) < 16*16)
 		{
 			g->humans[i].alive = false;
-			g->worm.ripple = 0;
+			g->worm.has_ripple[0] = true;
 			whitgl_sound_play(whitgl_randint(SOUND_OM3+1), 0.9+whitgl_randfloat()/5);
 		}
 	}
