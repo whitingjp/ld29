@@ -13,6 +13,29 @@
 
 ld29_game g;
 
+const char* fragment_src = "\
+#version 150\
+\n\
+in vec2 Texturepos;\
+out vec4 outColor;\
+uniform sampler2D tex;\
+void main()\
+{\
+	float off = 0.01;\
+	vec2 north = Texturepos; north.y -= off;\
+	vec4 northt = texture( tex, north ); northt = floor(northt*1.1)/2.0;\
+	vec2 east = Texturepos; east.x += off;\
+	vec4 eastt = texture( tex, east ); eastt = floor(eastt*1.1)/2.0;\
+	vec2 south = Texturepos; south.y += off;\
+	vec4 southt = texture( tex, south ); southt = floor(southt*1.1)/2.0;\
+	vec2 west = Texturepos; west.x -= off;\
+	vec4 westt = texture( tex, west ); westt = floor(westt*1.1)/2.0;\
+	outColor = texture( tex, Texturepos )+northt/8.0+eastt/8.0+southt/8.0+westt/8.0;\
+	float dim = (1-Texturepos.y)/4;\
+	outColor -= vec4(dim, dim*0.5, dim*0.8, 0);\
+}\
+";
+
 int main()
 {
 	WHITGL_LOG("Starting main.");
@@ -44,6 +67,10 @@ int main()
 	whitgl_loop_add(SOUND_DRILL, "data/drill.ogg");
 	whitgl_sound_add(SOUND_ITS_AN_EGG, "data/its_an_egg.ogg");
 	whitgl_sound_add(SOUND_CRACK, "data/crack.ogg");
+
+	whitgl_shader shader = whitgl_shader_zero;
+	shader.fragment_src = fragment_src;
+	whitgl_change_shader(WHITGL_SHADER_POST, shader);
 
 	WHITGL_LOG("Game init");
 	game_init(&g);

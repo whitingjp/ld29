@@ -30,7 +30,7 @@ ld29_worm worm_zero(const ld29_land* land)
 	// out.num_segments = WORM_MAX_SEGMENTS;
 	out.hurt_segment = -1;
 	out.pregnancy = 0;
-	out.alive = false;
+	out.alive = true;
 	out.ai = ld29_worm_ai_zero;
 	return out;
 }
