@@ -14,7 +14,7 @@ ld29_egg egg_zero()
 	out.bounce = 0;
 	return out;
 }
-ld29_egg egg_update(ld29_egg in, const ld29_land* land, bool should_hatch)
+ld29_egg egg_update(ld29_egg in, const ld29_land* land)
 {
 	if(in.dead)
 		return in;
@@ -33,12 +33,9 @@ ld29_egg egg_update(ld29_egg in, const ld29_land* land, bool should_hatch)
 		out.speed.y+=0.05;
 		out.pos = whitgl_fvec_add(in.pos, out.speed);
 	}
-	if(should_hatch)
-	{
-		out.hatch += 1.0/(60.0*10);
-		if(out.bounce == 0 && whitgl_randfloat() > 0.95)
-			out.bounce = 1;
-	}
+	out.hatch += 1.0/(60.0*10);
+	if(out.bounce == 0 && whitgl_randfloat() > 0.95)
+		out.bounce = 1;
 	out.bounce = whitgl_fmax(0, out.bounce-0.05);
 	return out;
 }

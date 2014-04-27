@@ -61,7 +61,7 @@ void game_update(ld29_game* g, whitgl_ivec screen_size)
 	land_update(g->land);
 	for(i=0; i<MAX_WORMS; i++)
 	{
-		g->worms[i] = worm_update(g->worms[i], g->land, i==g->player);
+		g->worms[i] = worm_update(g->worms[i], g->land, i==g->player, next_unused_worm != -1);
 		if(g->worms[i].pregnancy == -1)
 		{
 			g->egg = egg_zero();
@@ -70,7 +70,7 @@ void game_update(ld29_game* g, whitgl_ivec screen_size)
 			g->worms[i].pregnancy = 0;
 		}
 	}
-	g->egg = egg_update(g->egg, g->land, next_unused_worm != -1);
+	g->egg = egg_update(g->egg, g->land);
 	if(g->egg.hatch > 1)
 	{
 		whitgl_sound_play(SOUND_CRACK, 1);

@@ -34,7 +34,7 @@ ld29_worm worm_zero(const ld29_land* land)
 	out.ai = ld29_worm_ai_zero;
 	return out;
 }
-ld29_worm worm_update(ld29_worm in, const ld29_land* land, bool is_player)
+ld29_worm worm_update(ld29_worm in, const ld29_land* land, bool is_player, bool broody)
 {
 	ld29_worm out = worm_zero(land);
 	if(!in.alive)
@@ -152,7 +152,7 @@ ld29_worm worm_update(ld29_worm in, const ld29_land* land, bool is_player)
 		out.dir = whitgl_fvec_to_angle(in.speed);
 	}
 
-	if(is_player && (out.num_segments == WORM_MAX_SEGMENTS || out.pregnancy > 0))
+	if(is_player && broody && (out.num_segments == WORM_MAX_SEGMENTS || out.pregnancy > 0))
 	{
 		out.pregnancy += 1.0/(60.0*15);
 		int steps = WORM_MAX_SEGMENTS-WORM_MIN_SEGMENTS;
