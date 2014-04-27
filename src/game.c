@@ -210,6 +210,9 @@ void game_do_damage(ld29_game* g, ld29_damage damage)
 						g->worms[i].hurt_segment = j;
 				}
 			}
+			whitgl_fvec dist = whitgl_fvec_sub(g->egg.pos, splat.pos);
+			if(whitgl_fvec_sqmagnitude(dist) < splat.size*splat.size)
+				g->egg.dead = true;
 			break;
 		}
 		default: break;
