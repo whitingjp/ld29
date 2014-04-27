@@ -34,6 +34,10 @@ int main()
 	whitgl_sound_add(SOUND_OM1, "data/om1.ogg");
 	whitgl_sound_add(SOUND_OM2, "data/om2.ogg");
 	whitgl_sound_add(SOUND_OM3, "data/om3.ogg");
+	whitgl_loop_add(SOUND_GROUND, "data/ground.ogg");
+	whitgl_loop_add(SOUND_EMERGE, "data/emerge.ogg");
+	whitgl_loop_add(SOUND_SHHH, "data/shhh.ogg");
+	whitgl_loop_add(SOUND_SHAAA, "data/shaaa.ogg");
 
 	game_init(&g);
 

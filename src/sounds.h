@@ -7,6 +7,10 @@ typedef enum
 	SOUND_OM1,
 	SOUND_OM2,
 	SOUND_OM3,
+	SOUND_GROUND,
+	SOUND_EMERGE,
+	SOUND_SHHH,
+	SOUND_SHAAA,
 } sound;
 
 #endif // SOUNDS_H

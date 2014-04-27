@@ -6,6 +6,16 @@
 #include <entity/land.h>
 
 #define WORM_NUM_SEGMENTS (48)
+
+typedef struct
+{
+	whitgl_float ground;
+	whitgl_float emerge;
+	whitgl_float shhh;
+	whitgl_float shaaa;
+} ld29_worm_volumes;
+static const ld29_worm_volumes ld29_worm_volumes_zero = {0,0,0,0};
+
 typedef struct
 {
 	whitgl_fvec segments[WORM_NUM_SEGMENTS];
@@ -15,6 +25,8 @@ typedef struct
 	whitgl_float boost_dir;
 	whitgl_float maw_anim;
 	whitgl_int ripple;
+	ld29_worm_volumes vol_current;
+	ld29_worm_volumes vol_target;
 } ld29_worm;
 ld29_worm worm_zero(const ld29_land* land);
 ld29_worm worm_update(ld29_worm in, const ld29_land* land);

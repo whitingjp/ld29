@@ -108,11 +108,17 @@ void whitgl_loop_add(int id, const char* filename)
 		return;
 	}
 	sounds[num_sounds].id = id;
-	FMOD_RESULT result = FMOD_System_CreateSound(fmodSystem, filename, FMOD_HARDWARE | FMOD_2D, 0, &sounds[num_sounds].sound);
+	FMOD_RESULT result = FMOD_System_CreateSound(fmodSystem, filename, FMOD_HARDWARE | FMOD_2D | FMOD_LOOP_NORMAL, 0, &sounds[num_sounds].sound);
 	_whitgl_sound_errcheck("FMOD_System_CreateSound", result);
 
-	result = FMOD_System_PlaySound(fmodSystem, FMOD_CHANNEL_FREE, sounds[num_sounds].sound, false, &sounds[num_sounds].channel);
+	result = FMOD_System_PlaySound(fmodSystem, FMOD_CHANNEL_FREE, sounds[num_sounds].sound, true, &sounds[num_sounds].channel);
 	_whitgl_sound_errcheck("FMOD_System_PlaySound", result);
+
+	result = FMOD_Channel_SetVolume(sounds[num_sounds].channel, 0);
+	_whitgl_sound_errcheck("FMOD_Channel_SetVolume", result);
+
+	result = FMOD_Channel_SetPaused(sounds[num_sounds].channel, false);
+	_whitgl_sound_errcheck("FMOD_Channel_SetPaused", result);
 
 	num_sounds++;
 }

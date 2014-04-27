@@ -2,7 +2,9 @@
 
 #include <whitgl/input.h>
 #include <whitgl/logging.h>
+#include <whitgl/sound.h>
 #include <whitgl/sys.h>
+#include <sounds.h>
 
 ld29_worm worm_zero(const ld29_land* land)
 {
@@ -19,11 +21,14 @@ ld29_worm worm_zero(const ld29_land* land)
 	out.boost_dir = 0;
 	out.maw_anim = 0;
 	out.ripple = -1;
+	out.vol_current = ld29_worm_volumes_zero;
+	out.vol_target = ld29_worm_volumes_zero;
 	return out;
 }
 ld29_worm worm_update(ld29_worm in, const ld29_land* land)
 {
 	ld29_worm out = worm_zero(land);
+	out.vol_target = in.vol_target;
 	int i;
 	for(i=0; i<WORM_NUM_SEGMENTS-1; i++)
 		out.segments[i+1] = in.segments[i];
@@ -56,12 +61,21 @@ ld29_worm worm_update(ld29_worm in, const ld29_land* land)
 			out.dir -= dir_speed;
 			out.boost_dir = whitgl_fmax(-1, in.boost_dir-boost_dir_speed);
 			boosting = out.boost_dir > -0.5;
+			out.vol_target.shhh = boosting ? 0.1 : 0.0;
+		} else
+		{
+			out.vol_target.shhh = 0;
 		}
 		if(whitgl_input_down(WHITGL_INPUT_RIGHT))
 		{
 			out.dir += dir_speed;
 			out.boost_dir = whitgl_fmin(1, in.boost_dir+boost_dir_speed);
 			boosting = out.boost_dir < 0.5;
+			out.vol_target.shhh = 0.0;
+			out.vol_target.shaaa = boosting ? 0.1 : 0.0;
+		} else
+		{
+			out.vol_target.shaaa = 0;
 		}
 		whitgl_float boost_inc = 0.03;
 		if(boosting)
@@ -78,8 +92,15 @@ ld29_worm worm_update(ld29_worm in, const ld29_land* land)
 		// WHITGL_LOG("boost_dir %.2f boost %.2f speed %.2f", out.boost_dir, out.boost, speed);
 		whitgl_fvec speed_scale = {speed, speed};
 		out.speed = whitgl_fvec_scale(whitgl_angle_to_fvec(out.dir), speed_scale);
+
+		out.vol_target.ground = 0.04*speed;
+		out.vol_target.emerge = 0.0;
 	} else
 	{
+		out.vol_target.ground = 0.0;
+		out.vol_target.emerge = 1.0;
+		out.vol_target.shhh = 0.0;
+		out.vol_target.shaaa = 0.0;
 		out.boost = in.boost;
 		out.boost_dir = in.boost_dir;
 		out.speed.x = in.speed.x*0.995;
@@ -108,6 +129,16 @@ ld29_worm worm_update(ld29_worm in, const ld29_land* land)
 		if(out.ripple >= WORM_NUM_SEGMENTS)
 			out.ripple = -1;
 	}
+
+	out.vol_current.ground = (in.vol_current.ground*4 + out.vol_target.ground)/5;
+	whitgl_loop_volume(SOUND_GROUND, out.vol_current.ground);
+	out.vol_current.emerge = (in.vol_current.emerge + out.vol_target.emerge)/2;
+	whitgl_loop_volume(SOUND_EMERGE, out.vol_current.emerge);
+	out.vol_current.shhh = (in.vol_current.shhh*9 + out.vol_target.shhh)/10;
+	whitgl_loop_volume(SOUND_SHHH, out.vol_current.shhh);
+	out.vol_current.shaaa = (in.vol_current.shaaa*9 + out.vol_target.shaaa)/10;
+	whitgl_loop_volume(SOUND_SHAAA, out.vol_current.shaaa);
+
 	return out;
 }
 void worm_draw(ld29_worm worm, whitgl_ivec camera)
