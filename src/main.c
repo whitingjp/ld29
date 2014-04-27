@@ -64,7 +64,7 @@ int main()
 		//WHITGL_LOG("fps: %f", 1.0/(now-then));
 		while(update_time > 0)
 		{
-			game_update(&g);
+			game_update(&g, setup.size);
 			update_time -= 1.0/60.0;
 		}
 

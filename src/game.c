@@ -43,13 +43,13 @@ void game_shutdown(ld29_game* g)
 	free(g->land);
 	free(g);
 }
-void game_update(ld29_game* g)
+void game_update(ld29_game* g, whitgl_ivec screen_size)
 {
 	int i;
 	land_update(g->land);
 	g->worm = worm_update(g->worm, g->land);
 	g->egg = egg_update(g->egg, g->land);
-	g->drill = driller_update(g->drill, g->land);
+	g->drill = driller_update(g->drill, g->land, g->worm.segments[0], whitgl_ivec_to_fvec(screen_size));
 	for(i=0; i<MAX_HUMANS; i++)
 		g->humans[i] = human_update(g->humans[i], g->land);
 	for(i=0; i<MAX_HUMANS; i++)

@@ -19,8 +19,15 @@ ld29_driller driller_zero(whitgl_fvec pos)
 	out.drill_volume = 0;
 	return out;
 }
-ld29_driller driller_update(ld29_driller in, const ld29_land* land)
+ld29_driller driller_update(ld29_driller in, const ld29_land* land, whitgl_fvec speaker_pos, whitgl_fvec screen_size)
 {
+	whitgl_fvec speaker_diff = whitgl_fvec_sub(in.pos, speaker_pos);
+	bool on_screen = true;
+	if(speaker_diff.x > screen_size.x/2 || speaker_diff.x < -screen_size.x/2)
+		on_screen = false;
+	if(speaker_diff.y > screen_size.y/2 || speaker_diff.y < -screen_size.y/2)
+		on_screen = false;
+
 	ld29_driller out = driller_zero(in.pos);
 	out.drill_timer = in.drill_timer + 0.05;
 	if(out.drill_timer > 1) out.drill_timer--;
@@ -63,11 +70,11 @@ ld29_driller driller_update(ld29_driller in, const ld29_land* land)
 			out.speed.y = 0.5;
 		}
 	}
-	if(in.state != DRILLER_PRIMED && out.state == DRILLER_PRIMED)
+	if(in.state != DRILLER_PRIMED && out.state == DRILLER_PRIMED && on_screen)
 		whitgl_sound_play(SOUND_TRIGGER, 0.95+whitgl_randfloat()*0.1);
 	if(in.state == DRILLER_PRIMED)
 		out.beam_charge = in.beam_charge + 2.0/60.0;
-	if(in_land && out.beam_charge > 1)
+	if(in_land && out.beam_charge > 1 && on_screen)
 	{
 		out.beam_charge = 1;
 		out.attack.type = DAMAGE_BLAST;
@@ -77,7 +84,7 @@ ld29_driller driller_update(ld29_driller in, const ld29_land* land)
 	out.pos = whitgl_fvec_add(in.pos, out.speed);
 
 	float target_drill_volume = 0;
-	if(out.state == DRILLER_DRILLING)
+	if(out.state == DRILLER_DRILLING && on_screen)
 		target_drill_volume = 1;
 	out.drill_volume = (target_drill_volume+in.drill_volume*4)/5;
 	whitgl_loop_volume(SOUND_DRILL, out.drill_volume);
