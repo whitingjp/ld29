@@ -7,6 +7,7 @@ typedef enum
 {
 	DAMAGE_NONE,
 	DAMAGE_SIDE,
+	DAMAGE_BLAST,
 } ld29_damage_type;
 
 typedef struct

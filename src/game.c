@@ -25,7 +25,7 @@ void game_update(ld29_game* g)
 	land_update(g->land);
 	g->worm = worm_update(g->worm, g->land);
 	g->egg = egg_update(g->egg, g->land);
-	g->drill = driller_update(g->drill, g->land, g->egg);
+	g->drill = driller_update(g->drill, g->land);
 	if(g->drill.attack.type != DAMAGE_NONE)
 	{
 		game_do_damage(g, g->drill.attack);
@@ -42,23 +42,38 @@ void game_update(ld29_game* g)
 }
 void game_do_damage(ld29_game* g, ld29_damage damage)
 {
-	int i;
-	whitgl_fvec start_off = {-64, 0};
-	whitgl_fvec p = whitgl_fvec_add(damage.pos, start_off);
-	whitgl_fvec inc = {4, 0};
-	for(i=0; i<32; i++)
+	switch(damage.type)
 	{
-		whitgl_fcircle splat = whitgl_fcircle_zero;
-		splat.pos = p;
-		splat.size = 5;
-		land_splat(g->land, splat);
-		whitgl_float sqmag = whitgl_fvec_sqmagnitude(whitgl_fvec_sub(g->egg.pos, p));
-		if(sqmag < 16)
-			g->egg.dead = true;
-		p = whitgl_fvec_add(p, inc);
+		case DAMAGE_SIDE:
+		{
+			int i;
+			whitgl_fvec start_off = {-64, 0};
+			whitgl_fvec p = whitgl_fvec_add(damage.pos, start_off);
+			whitgl_fvec inc = {4, 0};
+			for(i=0; i<32; i++)
+			{
+				whitgl_fcircle splat = whitgl_fcircle_zero;
+				splat.pos = p;
+				splat.size = 5;
+				land_splat(g->land, splat);
+				whitgl_float sqmag = whitgl_fvec_sqmagnitude(whitgl_fvec_sub(g->egg.pos, p));
+				if(sqmag < 16)
+					g->egg.dead = true;
+				p = whitgl_fvec_add(p, inc);
+			}
+			break;
+		}
+		case DAMAGE_BLAST:
+		{
+			whitgl_fcircle splat = whitgl_fcircle_zero;
+			splat.pos = damage.pos;
+			splat.size = 50;
+			land_splat(g->land, splat);
+			break;
+		}
+		default: break;
 	}
-	(void)g;
-	(void)damage;
+
 }
 void game_draw(const ld29_game* g, whitgl_ivec screen_size)
 {

@@ -13,9 +13,10 @@ ld29_driller driller_zero(whitgl_fvec pos)
 	out.drill_timer = 0;
 	out.beam_charge = 0;
 	out.attack = damage_zero;
+	out.state = DRILLER_LANDING;
 	return out;
 }
-ld29_driller driller_update(ld29_driller in, const ld29_land* land, ld29_egg e)
+ld29_driller driller_update(ld29_driller in, const ld29_land* land)
 {
 	ld29_driller out = driller_zero(in.pos);
 	out.drill_timer = in.drill_timer + 0.05;
@@ -23,16 +24,35 @@ ld29_driller driller_update(ld29_driller in, const ld29_land* land, ld29_egg e)
 
 	whitgl_ivec offset = {0, 4};
 
-	if(land_get(land, whitgl_ivec_add(whitgl_fvec_to_ivec(in.pos), offset)) != LAND_GROUND)
+	bool in_land = land_get(land, whitgl_ivec_add(whitgl_fvec_to_ivec(in.pos), offset)) == LAND_GROUND;
+
+	bool entered_space = true;
+	int i;
+	offset.x = 0; offset.y = 1;
+	for(i=0; i<5; i++)
+	{
+		whitgl_ivec scale = whitgl_ivec_zero;
+		scale.x = i; scale.y = i;
+		if(land_get(land, whitgl_ivec_add(whitgl_fvec_to_ivec(in.pos), whitgl_ivec_scale(offset, scale))) == LAND_GROUND)
+			entered_space = false;
+	}
+
+	out.state = in.state;
+	if(!in_land)
+	{
 		out.speed.y = in.speed.y + 0.05;
-	else if(e.dead || (out.pos.y < e.pos.y && in.beam_charge == 0))
+		if(entered_space && in.state == DRILLER_DRILLING) out.state = DRILLER_PRIMED;
+	}
+	if(in_land && in.state == DRILLER_LANDING)
+		out.state = DRILLER_DRILLING;
+	if(in_land && in.beam_charge == 0)
 		out.speed.y = 0.5;
-	else
+	if(in.state == DRILLER_PRIMED)
 		out.beam_charge = in.beam_charge + 2.0/60.0;
-	if(out.beam_charge > 1)
+	if(in_land && out.beam_charge > 1)
 	{
 		out.beam_charge = 1;
-		out.attack.type = DAMAGE_SIDE;
+		out.attack.type = DAMAGE_BLAST;
 		out.attack.pos = out.pos;
 	}
 	out.pos = whitgl_fvec_add(in.pos, out.speed);
