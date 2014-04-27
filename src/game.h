@@ -21,6 +21,7 @@ typedef struct
 	int player;
 	whitgl_float transition;
 	whitgl_float throb;
+	whitgl_float offspring_display;
 } ld29_game;
 
 void game_init(ld29_game* g);

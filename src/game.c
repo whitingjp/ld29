@@ -6,6 +6,7 @@
 #include <whitgl/sound.h>
 #include <whitgl/sys.h>
 
+#include <image.h>
 #include <sounds.h>
 #include <titles.h>
 
@@ -45,6 +46,7 @@ void game_init(ld29_game* g)
 	g->player = 0;
 	g->transition = 0;
 	g->throb = 0;
+	g->offspring_display = 0;
 }
 void game_shutdown(ld29_game* g)
 {
@@ -76,6 +78,7 @@ void game_update(ld29_game* g, whitgl_ivec screen_size)
 	if(g->egg.hatch > 1)
 	{
 		whitgl_sound_play(SOUND_CRACK, 1);
+		g->offspring_display = 1;
 		if(next_unused_worm != -1)
 		{
 			g->worms[next_unused_worm].alive = true;
@@ -142,6 +145,8 @@ void game_update(ld29_game* g, whitgl_ivec screen_size)
 
 	g->throb = whitgl_fwrap(g->throb+0.025, 0, 1);
 	whitgl_set_shader_uniform(WHITGL_SHADER_POST, 1, whitgl_fsin(g->throb*whitgl_pi*2));
+
+	g->offspring_display = whitgl_fmax(0, g->offspring_display-0.004);
 }
 
 void _game_add_display_damage(whitgl_fcircle circle)
@@ -274,6 +279,30 @@ void game_draw(const ld29_game* g, whitgl_ivec screen_size)
 	whitgl_ivec offset = whitgl_ivec_zero;
 	offset.x = (screen_size.x - 320)/2; offset.y = (screen_size.y - 240)/2;
 	titles_draw(g->transition, offset);
+
+	if(g->offspring_display)
+	{
+		int count = -1;
+		for(i=0; i<MAX_WORMS; i++)
+			if(g->worms[i].alive)
+				count++;
+		for(i=0; i<count; i++)
+		{
+			float section = whitgl_fminmax(0, 1, (g->offspring_display*1.4)-(0.4*(count-i))/count);
+			whitgl_float transition = 0;
+			if(section > 0.9) transition = (section-0.9)*10;
+			if(section < 0.1) transition = 1-(section)*10;
+			transition *= transition;
+			whitgl_sprite sprite = whitgl_sprite_zero;
+			sprite.image = IMAGE_SPRITES;
+			sprite.size.x = 16; sprite.size.y = 16;
+			whitgl_ivec frame = whitgl_ivec_zero;
+			whitgl_ivec draw_pos = whitgl_ivec_zero;
+			draw_pos.x = 16*i+4;
+			draw_pos.y = -transition*32+4;
+			whitgl_sys_draw_sprite(sprite, frame, draw_pos);
+		}
+	}
 }
 
 void game_blast()
