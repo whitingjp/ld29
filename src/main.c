@@ -1,5 +1,6 @@
 #include <stdbool.h>
 #include <stddef.h>
+#include <string.h>
 
 #include <whitgl/input.h>
 #include <whitgl/logging.h>
@@ -40,7 +41,7 @@ void main()\
 }\
 ";
 
-int main()
+int main(int argc, char *argv[])
 {
 	WHITGL_LOG("Starting main.");
 
@@ -49,7 +50,9 @@ int main()
 	setup.size.x = 320;
 	setup.size.y = 240;
 	setup.pixel_size = 3;
-	setup.fullscreen = false;
+	setup.fullscreen = true;
+	if(argc > 1 && strncmp( argv[1], "windowed", 8) == 0)
+		setup.fullscreen = false;
 
 	if(!whitgl_sys_init(&setup))
 		return 1;
