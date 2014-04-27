@@ -18,10 +18,10 @@ int main()
 	WHITGL_LOG("Starting main.");
 
 	whitgl_sys_setup setup = whitgl_default_setup;
-	setup.name = "LD29";
+	setup.name = "Wyrmery";
 	setup.size.x = 320;
 	setup.size.y = 240;
-	setup.pixel_size = 3;
+	setup.pixel_size = 1;
 	setup.fullscreen = false;
 
 	if(!whitgl_sys_init(&setup))
@@ -29,6 +29,7 @@ int main()
 
 	whitgl_sys_add_image(IMAGE_SPRITES, "data/sprites.png");
 
+	WHITGL_LOG("Sound init");
 	whitgl_sound_init();
 	whitgl_sound_add(SOUND_OM0, "data/om0.ogg");
 	whitgl_sound_add(SOUND_OM1, "data/om1.ogg");
@@ -42,16 +43,20 @@ int main()
 	whitgl_sound_add(SOUND_TRIGGER, "data/trigger.ogg");
 	whitgl_loop_add(SOUND_DRILL, "data/drill.ogg");
 
+	WHITGL_LOG("Game init");
 	game_init(&g);
 
+	WHITGL_LOG("Input init");
 	whitgl_input_init();
 
 	double now = whitgl_sys_get_time();
 	double then = now;
 	double update_time = 0;
 
+	WHITGL_LOG("RNG init");
 	whitgl_randseed(now);
 
+	WHITGL_LOG("Running game.");
 	bool running = true;
 	while(running)
 	{

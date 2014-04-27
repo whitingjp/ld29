@@ -14,7 +14,7 @@ n = ninja_syntax.Writer(buildfile)
 
 objext = '.o'
 
-name = 'app'
+name = 'wyrmery'
 if(plat == 'Windows'):
   target = name+'.exe'
 else:
@@ -85,6 +85,7 @@ n.newline()
 
 if(plat == 'Windows'):
   targets += n.build(joinp(outdir, 'fmodex.dll'), 'cp', joinp(inputdir, 'fmod', 'fmodex.dll'))
+  targets += n.build(joinp(outdir, 'glew32.dll'), 'cp', joinp(inputdir, 'glew', 'lib', 'glew32.dll'))
 else:
   targets += n.build(joinp(outdir, 'libfmodex-4.44.15.so'), 'cp', joinp(inputdir, 'fmod', 'linux', 'lib', 'libfmodex-4.44.15.so'))
 n.newline()

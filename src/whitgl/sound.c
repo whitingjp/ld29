@@ -60,6 +60,7 @@ void whitgl_sound_shutdown()
 }
 void whitgl_sound_add(int id, const char* filename)
 {
+	WHITGL_LOG("Adding sound: %s", filename);
 	if(num_sounds >= WHITGL_SOUND_MAX)
 	{
 		WHITGL_LOG("ERR Too many sounds");
@@ -102,6 +103,7 @@ void whitgl_sound_play(int id, float adjust)
 
 void whitgl_loop_add(int id, const char* filename)
 {
+	WHITGL_LOG("Adding loop: %s", filename);
 	if(num_sounds >= WHITGL_SOUND_MAX)
 	{
 		WHITGL_LOG("ERR Too many sounds");

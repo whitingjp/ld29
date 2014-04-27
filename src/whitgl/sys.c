@@ -88,6 +88,11 @@ int GLFWCALL _whitgl_sys_close_callback();
 
 whitgl_sys_setup _setup;
 
+// void _whitgl_sys_glfw_error_callback(int code, const char* error)
+// {
+// 	WHITGL_LOG("glfw error %d '%s'", code, error);
+// }
+
 bool whitgl_change_shader(whitgl_shader_slot type, whitgl_shader shader)
 {
 	if(type >= WHITGL_SHADER_MAX)
@@ -162,6 +167,7 @@ bool whitgl_sys_init(whitgl_sys_setup* setup)
 
 	WHITGL_LOG("Initialize GLFW");
 
+	// glfwSetErrorCallback(&_whitgl_sys_glfw_error_callback);
 	result = glfwInit();
 	if(!result)
 	{
@@ -169,6 +175,7 @@ bool whitgl_sys_init(whitgl_sys_setup* setup)
 		exit( EXIT_FAILURE );
 	}
 
+	WHITGL_LOG("Setting GLFW window hints");
 	glfwOpenWindowHint( GLFW_OPENGL_VERSION_MAJOR, 3 );
 	glfwOpenWindowHint( GLFW_OPENGL_VERSION_MINOR, 2 );
 	glfwOpenWindowHint( GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE );
@@ -180,6 +187,7 @@ bool whitgl_sys_init(whitgl_sys_setup* setup)
 	_pixel_scale = setup->pixel_size;
 	if(setup->fullscreen)
 	{
+		WHITGL_LOG("Opening fullscreen w%d h%d", desktop.Width, desktop.Height);
 		result = glfwOpenWindow( desktop.Width, desktop.Height, desktop.RedBits,
 		                         desktop.GreenBits, desktop.BlueBits, 8, 32, 0,
 		                         GLFW_FULLSCREEN );
@@ -188,9 +196,11 @@ bool whitgl_sys_init(whitgl_sys_setup* setup)
 		setup->size.y = desktop.Height/_pixel_scale;
 	} else
 	{
+		WHITGL_LOG("Opening windowed w%d h%d", setup->size.x*_pixel_scale, setup->size.y*_pixel_scale);
 		result = glfwOpenWindow( setup->size.x*_pixel_scale, setup->size.y*_pixel_scale,
 		                         0,0,0,0, 0,0, GLFW_WINDOW );
 	}
+	WHITGL_LOG("Setting title");
 	glfwSetWindowTitle(setup->name);
 	if(!result)
 	{
@@ -198,11 +208,14 @@ bool whitgl_sys_init(whitgl_sys_setup* setup)
 		exit( EXIT_FAILURE );
 	}
 
+	WHITGL_LOG("Initiating glew");
 	glewExperimental = GL_TRUE;
 	glewInit();
 
+	WHITGL_LOG("Generating vbo");
 	glGenBuffers( 1, &vbo ); // Generate 1 buffer
 
+	WHITGL_LOG("Loading shaders");
 	whitgl_shader flat_shader = whitgl_shader_zero;
 	flat_shader.fragment_src = _flat_src;
 	if(!whitgl_change_shader( WHITGL_SHADER_FLAT, flat_shader))
@@ -213,11 +226,13 @@ bool whitgl_sys_init(whitgl_sys_setup* setup)
 	if(!whitgl_change_shader( WHITGL_SHADER_POST, texture_shader))
 		return false;
 
+	WHITGL_LOG("Creating framebuffer");
 	// The framebuffer, which regroups 0, 1, or more textures, and 0 or 1 depth buffer.
 	glGenFramebuffers(1, &frameBuffer);
 	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
 	glGenTextures(1, &intermediateTexture);
 	glBindTexture(GL_TEXTURE_2D, intermediateTexture);
+	WHITGL_LOG("Creating framebuffer glTexImage2D");
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, setup->size.x, setup->size.y, 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -228,13 +243,18 @@ bool whitgl_sys_init(whitgl_sys_setup* setup)
 		WHITGL_LOG("Problem setting up intermediate render target");
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
+	WHITGL_LOG("Enabling vsync");
 	// Enable vertical sync (on cards that support it)
 	glfwSwapInterval( 1 );
 
+	WHITGL_LOG("Setting close callback");
 	glfwSetWindowCloseCallback(_whitgl_sys_close_callback);
 
 	if(setup->disable_mouse_cursor)
+	{
+		WHITGL_LOG("Disable mouse cursor");
 		glfwDisable(GLFW_MOUSE_CURSOR);
+	}
 
 	int i;
 	for(i=0; i<WHITGL_IMAGE_MAX; i++)
@@ -242,6 +262,8 @@ bool whitgl_sys_init(whitgl_sys_setup* setup)
 	num_images = 0;
 
 	_setup = *setup;
+
+	WHITGL_LOG("Sys initiated");
 
 	return true;
 }
@@ -495,6 +517,7 @@ void whitgl_sys_draw_sprite(whitgl_sprite sprite, whitgl_ivec frame, whitgl_ivec
 
 void whitgl_sys_add_image(int id, const char* filename)
 {
+	WHITGL_LOG("Adding image: %s", filename);
 	if(num_images >= WHITGL_IMAGE_MAX)
 	{
 		WHITGL_LOG("ERR Too many images");
