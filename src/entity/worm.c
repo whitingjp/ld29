@@ -27,8 +27,22 @@ ld29_worm worm_update(ld29_worm in, const ld29_land* land)
 	for(i=0; i<WORM_NUM_SEGMENTS-1; i++)
 		out.segments[i+1] = in.segments[i];
 
-	bool in_land = land_get(land, whitgl_fvec_to_ivec(in.segments[0])) == LAND_GROUND;
-	if(in_land)
+	ld29_land_type type = land_get(land, whitgl_fvec_to_ivec(in.segments[0]));
+	bool in_land = type == LAND_GROUND;
+	if(type == LAND_BEDROCK)
+	{
+		if(in.speed.x*in.speed.x < 0.2)
+			out.speed.x = whitgl_randfloat();
+		else
+			out.speed.x = in.speed.x;
+		out.speed.y = -in.speed.y*1.5;
+		out.dir = whitgl_fvec_to_angle(out.speed);
+		while(type == LAND_BEDROCK)
+		{
+			in.segments[0].y--;
+			type = land_get(land, whitgl_fvec_to_ivec(in.segments[0]));
+		}
+	} else if(in_land)
 	{
 		whitgl_float dir_speed = 0.15;
 		whitgl_float boost_dir_speed = 0.03;

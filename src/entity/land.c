@@ -107,7 +107,8 @@ void land_splat(ld29_land* land, whitgl_fcircle c)
 			whitgl_int sqmag = whitgl_ivec_sqmagnitude(whitgl_ivec_sub(center, pos));
 			if(sqmag > c.size*c.size)
 				continue;
-			if(land_get(land, pos) == LAND_SKY)
+			ld29_land_type type = land_get(land, pos);
+			if(type == LAND_SKY || type == LAND_BEDROCK)
 				continue;
 			land_set(land, LAND_TUNNEL, pos);
 		}
