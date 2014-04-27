@@ -23,10 +23,6 @@ void game_init(ld29_game* g)
 	land_zero(g->land);
 	g->worm = worm_zero(g->land);
 	g->egg = egg_zero(g->land);
-	whitgl_fcircle splat = whitgl_fcircle_zero;
-	splat.pos = g->egg.pos;
-	splat.size = 20;
-	land_splat(g->land, splat);
 	whitgl_fvec drill_pos = {whitgl_randint(g->land->size.x), 0};
 	g->drill = driller_zero(drill_pos);
 	int i;
