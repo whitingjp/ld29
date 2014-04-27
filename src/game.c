@@ -70,7 +70,7 @@ void game_update(ld29_game* g, whitgl_ivec screen_size)
 		g->drill = driller_zero(drill_pos);
 	}
 	whitgl_fcircle splat = whitgl_fcircle_zero;
-	splat.pos = g->worm.segments[5]; // can't do 0 because it mucks up land_get
+	splat.pos = g->worm.segments[7]; // can't do 0 because it mucks up land_get
 	splat.size = 6;
 	land_splat(g->land, splat);
 	splat.pos = g->drill.pos;

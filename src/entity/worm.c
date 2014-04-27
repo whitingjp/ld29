@@ -26,8 +26,10 @@ ld29_worm worm_zero(const ld29_land* land)
 	out.vol_current = ld29_worm_volumes_zero;
 	out.vol_target = ld29_worm_volumes_zero;
 	out.air_time = 0;
-	out.num_segments = WORM_MIN_SEGMENTS*2;
+	// out.num_segments = WORM_MIN_SEGMENTS*2;
+	out.num_segments = WORM_MAX_SEGMENTS-1;
 	out.hurt_segment = -1;
+	out.pregnancy = 0;
 	return out;
 }
 ld29_worm worm_update(ld29_worm in, const ld29_land* land)
@@ -37,6 +39,7 @@ ld29_worm worm_update(ld29_worm in, const ld29_land* land)
 	out.air_time = in.air_time;
 	out.num_segments = in.num_segments;
 	out.hurt_segment = in.hurt_segment;
+	out.pregnancy = in.pregnancy;
 	int i;
 	for(i=0; i<in.num_segments-1; i++)
 		out.segments[i+1] = in.segments[i];
@@ -108,6 +111,7 @@ ld29_worm worm_update(ld29_worm in, const ld29_land* land)
 
 		whitgl_float speed = 1.5*(1+whitgl_fsqrt(whitgl_fsqrt(out.boost)));
 		// WHITGL_LOG("boost_dir %.2f boost %.2f speed %.2f", out.boost_dir, out.boost, speed);
+		speed *= 0.6+(1-out.pregnancy)*0.4;
 		whitgl_fvec speed_scale = {speed, speed};
 		out.speed = whitgl_fvec_scale(whitgl_angle_to_fvec(out.dir), speed_scale);
 
@@ -129,6 +133,16 @@ ld29_worm worm_update(ld29_worm in, const ld29_land* land)
 		out.speed.x = in.speed.x*0.995;
 		out.speed.y = in.speed.y+0.07;
 		out.dir = whitgl_fvec_to_angle(in.speed);
+	}
+
+	if(out.num_segments == WORM_MAX_SEGMENTS || out.pregnancy > 0)
+	{
+		out.pregnancy += 1.0/(60.0*20);
+		int steps = WORM_MAX_SEGMENTS-WORM_MIN_SEGMENTS;
+		if((int)(in.pregnancy*steps) != (int)(out.pregnancy*steps))
+			out.num_segments--;
+		if(out.pregnancy >= 1)
+			out.pregnancy = 0;
 	}
 
 	out.segments[0] = whitgl_fvec_add(in.segments[0], out.speed);
@@ -169,21 +183,29 @@ ld29_worm worm_update(ld29_worm in, const ld29_land* land)
 }
 void worm_draw(ld29_worm worm, whitgl_ivec camera)
 {
-	whitgl_sys_color color = {0xf4, 0xc2, 0xde, 0xff};
+	whitgl_sys_color normal_color = {0xf4, 0xc2, 0xde, 0xff};
 	whitgl_sys_color hurt_color = {0xae, 0xb7, 0x46, 0xff};
+	whitgl_sys_color pregnant_color = {0xf8, 0xaf, 0xb6, 0xff};
 	int i;
 	for(i=0; i<worm.num_segments; i++)
 	{
 		whitgl_fcircle c = whitgl_fcircle_zero;
+		whitgl_sys_color color = normal_color;
 		c.pos = whitgl_fvec_add(worm.segments[i], whitgl_ivec_to_fvec(camera));
 		float ratio = ((float)worm.num_segments-i)/worm.num_segments;
 		c.size = (whitgl_float)ratio*5+1;
 		if(i%4==0) c.size *= 1.25;
 		if(worm.has_ripple[i]) c.size *= 1.5;
+		int pregnancy_pos = worm.num_segments*worm.pregnancy;
+		if(worm.pregnancy > 0 && i > 0 && i == pregnancy_pos)
+		{
+			c.size += 10*worm.pregnancy;
+			color = pregnant_color;
+		}
 		if(worm.hurt_segment != -1 && i >= worm.hurt_segment)
-			whitgl_sys_draw_fcircle(c, hurt_color, 16);
-		else
-			whitgl_sys_draw_fcircle(c, color, 16);
+			color = hurt_color;
+
+		whitgl_sys_draw_fcircle(c, color, 16);
 	}
 	// maw
 	whitgl_fvec maw;
@@ -199,14 +221,14 @@ void worm_draw(ld29_worm worm, whitgl_ivec camera)
 		maw = whitgl_fvec_add(worm.segments[0], whitgl_fvec_scale(maw_off, maw_off_scale));
 		mawc.pos = whitgl_fvec_add(maw, whitgl_ivec_to_fvec(camera));
 		mawc.size = 1.5;
-		whitgl_sys_draw_fcircle(mawc, color, 16);
+		whitgl_sys_draw_fcircle(mawc, normal_color, 16);
 
 		maw_off = whitgl_angle_to_fvec(worm.dir-maw_ang_off*1.2);
 		maw_off_scale.x = 6; maw_off_scale.y = 6;
 		maw = whitgl_fvec_add(worm.segments[0], whitgl_fvec_scale(maw_off, maw_off_scale));
 		mawc.pos = whitgl_fvec_add(maw, whitgl_ivec_to_fvec(camera));
 		mawc.size = 2.5;
-		whitgl_sys_draw_fcircle(mawc, color, 16);
+		whitgl_sys_draw_fcircle(mawc, normal_color, 16);
 
 		maw_ang_off = -maw_ang_off;
 	}
