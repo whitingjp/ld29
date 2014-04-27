@@ -51,7 +51,7 @@ ld29_driller driller_update(ld29_driller in, const ld29_land* land)
 		if(land_type == LAND_BEDROCK)
 		{
 			out.state = DRILLER_PRIMED;
-			out.speed.y = 0.1;
+			out.speed.y = 0.0;
 		} else
 		{
 			out.speed.y = 0.5;

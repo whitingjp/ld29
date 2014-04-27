@@ -97,9 +97,6 @@ void land_splat(ld29_land* land, whitgl_fcircle c)
 	bounds.a = whitgl_ivec_sub(center, offset);
 	bounds.b = whitgl_ivec_add(center, offset);
 	whitgl_ivec pos;
-	whitgl_iaabb land_bounds = whitgl_iaabb_zero;
-	land_bounds.b = land->size;
-	bounds = whitgl_iaabb_intersection(bounds, land_bounds);
 	for(pos.x=bounds.a.x; pos.x<=bounds.b.x; pos.x++)
 	{
 		for(pos.y=bounds.a.y; pos.y<=bounds.b.y; pos.y++)
