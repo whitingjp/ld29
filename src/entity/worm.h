@@ -10,6 +10,16 @@
 
 typedef struct
 {
+	whitgl_fvec target;
+	int repick;
+	float wiggle;
+	float wiggle_speed;
+	bool press_left;
+} ld29_worm_ai;
+static const ld29_worm_ai ld29_worm_ai_zero = {{0,0}, 0, 0, 0.1, false};
+
+typedef struct
+{
 	whitgl_float ground;
 	whitgl_float emerge;
 	whitgl_float shhh;
@@ -33,9 +43,12 @@ typedef struct
 	whitgl_int hurt_segment;
 	whitgl_float pregnancy;
 	bool alive;
+	ld29_worm_ai ai;
 } ld29_worm;
 ld29_worm worm_zero(const ld29_land* land);
 ld29_worm worm_update(ld29_worm in, const ld29_land* land, bool is_player);
 void worm_draw(ld29_worm w, whitgl_ivec camera);
+
+ld29_worm_ai worm_ai_update(ld29_worm_ai in, const ld29_worm* worm, const ld29_land* land);
 
 #endif // WORM_H

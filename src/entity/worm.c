@@ -31,6 +31,7 @@ ld29_worm worm_zero(const ld29_land* land)
 	out.hurt_segment = -1;
 	out.pregnancy = 0;
 	out.alive = false;
+	out.ai = ld29_worm_ai_zero;
 	return out;
 }
 ld29_worm worm_update(ld29_worm in, const ld29_land* land, bool is_player)
@@ -43,6 +44,7 @@ ld29_worm worm_update(ld29_worm in, const ld29_land* land, bool is_player)
 	out.num_segments = in.num_segments;
 	out.hurt_segment = in.hurt_segment;
 	out.pregnancy = in.pregnancy;
+	out.ai = worm_ai_update(in.ai, &in, land);
 	int i;
 	for(i=0; i<in.num_segments-1; i++)
 		out.segments[i+1] = in.segments[i];
@@ -80,7 +82,18 @@ ld29_worm worm_update(ld29_worm in, const ld29_land* land, bool is_player)
 		out.boost_dir = in.boost_dir;
 		out.boost = in.boost;
 		bool boosting = false;
-		if(whitgl_input_down(WHITGL_INPUT_LEFT))
+		bool press_left = false;
+		bool press_right = false;
+		if(is_player)
+		{
+			press_left = whitgl_input_down(WHITGL_INPUT_LEFT);
+			press_right = whitgl_input_down(WHITGL_INPUT_LEFT);
+		} else
+		{
+			press_left = in.ai.press_left;
+			press_right = !in.ai.press_left;
+		}
+		if(press_left)
 		{
 			out.dir -= dir_speed;
 			out.boost_dir = whitgl_fmax(-1, in.boost_dir-boost_dir_speed);
@@ -90,7 +103,7 @@ ld29_worm worm_update(ld29_worm in, const ld29_land* land, bool is_player)
 		{
 			out.vol_target.shhh = 0;
 		}
-		if(whitgl_input_down(WHITGL_INPUT_RIGHT))
+		if(press_right)
 		{
 			out.dir += dir_speed;
 			out.boost_dir = whitgl_fmin(1, in.boost_dir+boost_dir_speed);
@@ -243,6 +256,29 @@ void worm_draw(ld29_worm worm, whitgl_ivec camera)
 
 		maw_ang_off = -maw_ang_off;
 	}
+}
 
-
+ld29_worm_ai worm_ai_update(ld29_worm_ai in, const ld29_worm* worm, const ld29_land* land)
+{
+	ld29_worm_ai out = in;
+	out.repick = in.repick-1;
+	if(out.repick <= 0)
+	{
+		out.repick = whitgl_randint(60*3);
+		out.target.x = whitgl_randint(land->size.x);
+		out.target.y = whitgl_randint(land->size.y-100);
+		out.wiggle = 0;
+		out.wiggle_speed = 0.1+whitgl_randfloat()/10;
+	}
+	out.wiggle += in.wiggle_speed;
+	whitgl_fvec ideal_vector = whitgl_fvec_sub(in.target, worm->segments[0]);
+	whitgl_float ideal_dir = whitgl_fvec_to_angle(ideal_vector) + whitgl_fsin(out.wiggle);
+	whitgl_float actual_dir = worm->dir;
+	float diff = ideal_dir - actual_dir;
+	if(diff > whitgl_pi)
+		diff -= whitgl_pi*2;
+	if(diff < -whitgl_pi)
+		diff += whitgl_pi*2;
+	out.press_left = diff < 0;
+	return out;
 }
