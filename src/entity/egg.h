@@ -14,7 +14,7 @@ typedef struct
 	float bounce;
 } ld29_egg;
 ld29_egg egg_zero();
-ld29_egg egg_update(ld29_egg in, const ld29_land* land);
+ld29_egg egg_update(ld29_egg in, const ld29_land* land, bool is_player);
 void egg_draw(ld29_egg e, whitgl_ivec camera);
 
 #endif // EGG_H

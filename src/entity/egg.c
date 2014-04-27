@@ -1,5 +1,6 @@
 #include "egg.h"
 
+#include <whitgl/input.h>
 #include <whitgl/sys.h>
 
 #include <image.h>
@@ -14,7 +15,7 @@ ld29_egg egg_zero()
 	out.bounce = 0;
 	return out;
 }
-ld29_egg egg_update(ld29_egg in, const ld29_land* land)
+ld29_egg egg_update(ld29_egg in, const ld29_land* land, bool is_player)
 {
 	if(in.dead)
 		return in;
@@ -33,9 +34,18 @@ ld29_egg egg_update(ld29_egg in, const ld29_land* land)
 		out.speed.y+=0.05;
 		out.pos = whitgl_fvec_add(in.pos, out.speed);
 	}
-	out.hatch += 1.0/(60.0*10);
-	if(out.bounce == 0 && whitgl_randfloat() > 0.95)
+	if(!is_player)
+		out.hatch += 1.0/(60.0*10);
+	bool trigger = false;
+	if(is_player && (whitgl_input_pressed(WHITGL_INPUT_LEFT) || whitgl_input_pressed(WHITGL_INPUT_RIGHT)))
+		trigger = true;
+	if(!is_player && whitgl_randfloat() > 0.95)
+		trigger = true;
+	if(out.bounce == 0 && trigger)
+	{
 		out.bounce = 1;
+		if(is_player) out.hatch += 0.3;
+	}
 	out.bounce = whitgl_fmax(0, out.bounce-0.05);
 	return out;
 }

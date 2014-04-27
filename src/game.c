@@ -32,14 +32,13 @@ void game_init(ld29_game* g)
 	g->egg = egg_zero();
 	g->egg.dead = false;
 	g->egg.pos.y = 200;
-	g->egg.hatch = 0.75;
 	whitgl_fvec drill_pos = {whitgl_randint(g->land->size.x), 0};
 	g->drill = driller_zero(drill_pos);
 	for(i=0; i<MAX_DISPLAYED_DAMAGES; i++)
 		display_damages[i] = ld29_damage_display_zero;
 	for(i=0; i<MAX_HUMANS; i++)
 	{
-		whitgl_fvec human_pos = {whitgl_randint(g->land->size.x), 0};
+		whitgl_fvec human_pos = {whitgl_randint(g->land->size.x), 100};
 		g->humans[i] = human_zero(human_pos);
 	}
 	g->player = 0;
@@ -70,7 +69,7 @@ void game_update(ld29_game* g, whitgl_ivec screen_size)
 			g->worms[i].pregnancy = 0;
 		}
 	}
-	g->egg = egg_update(g->egg, g->land);
+	g->egg = egg_update(g->egg, g->land, !g->worms[g->player].alive);
 	if(g->egg.hatch > 1)
 	{
 		whitgl_sound_play(SOUND_CRACK, 1);
@@ -82,7 +81,8 @@ void game_update(ld29_game* g, whitgl_ivec screen_size)
 		}
 		g->egg = egg_zero();
 	}
-	g->drill = driller_update(g->drill, g->land, g->worms[g->player].segments[0], whitgl_ivec_to_fvec(screen_size));
+	if(g->worms[g->player].alive)
+		g->drill = driller_update(g->drill, g->land, g->worms[g->player].segments[0], whitgl_ivec_to_fvec(screen_size));
 	for(i=0; i<MAX_HUMANS; i++)
 		g->humans[i] = human_update(g->humans[i], g->land);
 	for(i=0; i<MAX_HUMANS; i++)
@@ -218,8 +218,8 @@ void _game_display_damages(whitgl_ivec camera)
 
 void game_draw(const ld29_game* g, whitgl_ivec screen_size)
 {
-	whitgl_fvec target = g->worms[0].segments[0];
-	if(!g->worms[0].alive)
+	whitgl_fvec target = g->worms[g->player].segments[0];
+	if(!g->worms[g->player].alive)
 		target = g->egg.pos;
 	whitgl_ivec camera = whitgl_ivec_inverse(whitgl_fvec_to_ivec(target));
 	camera.x += screen_size.x/2;
