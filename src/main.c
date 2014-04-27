@@ -43,6 +43,7 @@ int main()
 	whitgl_sound_add(SOUND_TRIGGER, "data/trigger.ogg");
 	whitgl_loop_add(SOUND_DRILL, "data/drill.ogg");
 	whitgl_sound_add(SOUND_ITS_AN_EGG, "data/its_an_egg.ogg");
+	whitgl_sound_add(SOUND_CRACK, "data/crack.ogg");
 
 	WHITGL_LOG("Game init");
 	game_init(&g);

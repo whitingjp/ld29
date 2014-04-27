@@ -64,6 +64,7 @@ void game_update(ld29_game* g, whitgl_ivec screen_size)
 	g->egg = egg_update(g->egg, g->land, next_unused_worm != -1);
 	if(g->egg.hatch > 1)
 	{
+		whitgl_sound_play(SOUND_CRACK, 1);
 		if(next_unused_worm != -1)
 		{
 			g->worms[next_unused_worm].alive = true;
