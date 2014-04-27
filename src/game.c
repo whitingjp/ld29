@@ -7,6 +7,7 @@
 #include <whitgl/sys.h>
 
 #include <sounds.h>
+#include <titles.h>
 
 typedef struct
 {
@@ -42,6 +43,7 @@ void game_init(ld29_game* g)
 		g->humans[i] = human_zero(human_pos);
 	}
 	g->player = 0;
+	g->transition = 0;
 }
 void game_shutdown(ld29_game* g)
 {
@@ -130,6 +132,11 @@ void game_update(ld29_game* g, whitgl_ivec screen_size)
 			continue;
 		display_damages[i].timer -= 0.2;
 	}
+	whitgl_float trans_speed = 0.075;
+	if(!g->worms[g->player].alive)
+		g->transition = whitgl_fmax(g->transition-trans_speed, 0);
+	else
+		g->transition = whitgl_fmin(g->transition+trans_speed, 1);
 }
 
 void _game_add_display_damage(whitgl_fcircle circle)
@@ -258,6 +265,8 @@ void game_draw(const ld29_game* g, whitgl_ivec screen_size)
 	driller_draw(g->drill, camera_b);
 	_game_display_damages(camera_a);
 	_game_display_damages(camera_b);
+
+	titles_draw(g->transition);
 }
 
 void game_blast()

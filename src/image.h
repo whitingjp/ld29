@@ -4,6 +4,7 @@
 typedef enum
 {
 	IMAGE_SPRITES,
+	IMAGE_TITLES,
 	IMAGE_LAND,
 } image;
 

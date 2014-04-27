@@ -53,6 +53,7 @@ int main()
 		return 1;
 
 	whitgl_sys_add_image(IMAGE_SPRITES, "data/sprites.png");
+	whitgl_sys_add_image(IMAGE_TITLES, "data/titles.png");
 
 	WHITGL_LOG("Sound init");
 	whitgl_sound_init();
