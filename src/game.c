@@ -169,24 +169,24 @@ void game_draw(const ld29_game* g, whitgl_ivec screen_size)
 	if(camera.y < screen_size.y-g->land->size.y)
 		camera.y = screen_size.y-g->land->size.y;
 
-	camera.x += g->land->size.x*wrap_dir;
+	whitgl_ivec camera_a = camera;
+	whitgl_ivec camera_b = camera;
+	camera_b.x += g->land->size.x*wrap_dir;
 
-	land_draw(g->land, camera);
+	land_draw(g->land, camera_a);
+	land_draw(g->land, camera_b);
 	int i;
 	for(i=0; i<MAX_HUMANS; i++)
-		human_draw(g->humans[i], camera);
-	worm_draw(g->worm, camera);
-	egg_draw(g->egg, camera);
-	driller_draw(g->drill, camera);
-	_game_display_damages(camera);
-
-	camera.x -= g->land->size.x*wrap_dir;
-
-	land_draw(g->land, camera);
-	for(i=0; i<MAX_HUMANS; i++)
-		human_draw(g->humans[i], camera);
-	worm_draw(g->worm, camera);
-	egg_draw(g->egg, camera);
-	driller_draw(g->drill, camera);
-	_game_display_damages(camera);
+	{
+		human_draw(g->humans[i], camera_a);
+		human_draw(g->humans[i], camera_b);
+	}
+	worm_draw(g->worm, camera_a);
+	worm_draw(g->worm, camera_b);
+	egg_draw(g->egg, camera_a);
+	egg_draw(g->egg, camera_b);
+	driller_draw(g->drill, camera_a);
+	driller_draw(g->drill, camera_b);
+	_game_display_damages(camera_a);
+	_game_display_damages(camera_b);
 }
