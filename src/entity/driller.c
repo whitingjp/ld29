@@ -73,8 +73,8 @@ ld29_driller driller_update(ld29_driller in, const ld29_land* land, whitgl_fvec 
 	if(in.state != DRILLER_PRIMED && out.state == DRILLER_PRIMED && on_screen)
 		whitgl_sound_play(SOUND_TRIGGER, 0.95+whitgl_randfloat()*0.1);
 	if(in.state == DRILLER_PRIMED)
-		out.beam_charge = in.beam_charge + 2.0/60.0;
-	if(in_land && out.beam_charge > 1 && on_screen)
+		out.beam_charge = whitgl_fmin(1, in.beam_charge + 2.0/60.0);
+	if(in_land && out.beam_charge >= 1 && on_screen)
 	{
 		out.beam_charge = 1;
 		out.attack.type = DAMAGE_BLAST;
