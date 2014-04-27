@@ -4,7 +4,7 @@
 #define GLEW_STATIC
 #include <GL/glew.h>
 #include <GL/glfw.h>
-#include <SOIL/SOIL.h>
+#include <SOIL.h>
 
 #include <whitgl/logging.h>
 #include <whitgl/sys.h>
