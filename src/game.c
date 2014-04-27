@@ -45,6 +45,10 @@ void game_shutdown(ld29_game* g)
 void game_update(ld29_game* g, whitgl_ivec screen_size)
 {
 	int i;
+	int next_unused_worm = -1;
+	for(i=0; i<MAX_WORMS; i++)
+		if(!g->worms[i].alive)
+			next_unused_worm = i;
 	land_update(g->land);
 	for(i=0; i<MAX_WORMS; i++)
 	{
@@ -57,7 +61,17 @@ void game_update(ld29_game* g, whitgl_ivec screen_size)
 			g->worms[i].pregnancy = 0;
 		}
 	}
-	g->egg = egg_update(g->egg, g->land);
+	g->egg = egg_update(g->egg, g->land, next_unused_worm != -1);
+	if(g->egg.hatch > 1)
+	{
+		if(next_unused_worm != -1)
+		{
+			g->worms[next_unused_worm].alive = true;
+			for(i=0; i<WORM_MAX_SEGMENTS; i++)
+				g->worms[next_unused_worm].segments[i] = g->egg.pos;
+		}
+		g->egg = egg_zero();
+	}
 	g->drill = driller_update(g->drill, g->land, g->worms[g->player].segments[0], whitgl_ivec_to_fvec(screen_size));
 	for(i=0; i<MAX_HUMANS; i++)
 		g->humans[i] = human_update(g->humans[i], g->land);

@@ -27,6 +27,7 @@ ld29_worm worm_zero(const ld29_land* land)
 	out.vol_target = ld29_worm_volumes_zero;
 	out.air_time = 0;
 	out.num_segments = WORM_MIN_SEGMENTS*2;
+	// out.num_segments = WORM_MAX_SEGMENTS;
 	out.hurt_segment = -1;
 	out.pregnancy = 0;
 	out.alive = false;
@@ -139,7 +140,7 @@ ld29_worm worm_update(ld29_worm in, const ld29_land* land, bool is_player)
 
 	if(out.num_segments == WORM_MAX_SEGMENTS || out.pregnancy > 0)
 	{
-		out.pregnancy += 1.0/(60.0*20);
+		out.pregnancy += 1.0/(60.0*15);
 		int steps = WORM_MAX_SEGMENTS-WORM_MIN_SEGMENTS;
 		if((int)(in.pregnancy*steps) != (int)(out.pregnancy*steps))
 			out.num_segments--;
