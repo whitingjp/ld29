@@ -27,6 +27,7 @@ typedef struct
 	whitgl_int ripple;
 	ld29_worm_volumes vol_current;
 	ld29_worm_volumes vol_target;
+	whitgl_int air_time;
 } ld29_worm;
 ld29_worm worm_zero(const ld29_land* land);
 ld29_worm worm_update(ld29_worm in, const ld29_land* land);

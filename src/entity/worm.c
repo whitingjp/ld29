@@ -23,12 +23,14 @@ ld29_worm worm_zero(const ld29_land* land)
 	out.ripple = -1;
 	out.vol_current = ld29_worm_volumes_zero;
 	out.vol_target = ld29_worm_volumes_zero;
+	out.air_time = 0;
 	return out;
 }
 ld29_worm worm_update(ld29_worm in, const ld29_land* land)
 {
 	ld29_worm out = worm_zero(land);
 	out.vol_target = in.vol_target;
+	out.air_time = in.air_time;
 	int i;
 	for(i=0; i<WORM_NUM_SEGMENTS-1; i++)
 		out.segments[i+1] = in.segments[i];
@@ -93,12 +95,17 @@ ld29_worm worm_update(ld29_worm in, const ld29_land* land)
 		whitgl_fvec speed_scale = {speed, speed};
 		out.speed = whitgl_fvec_scale(whitgl_angle_to_fvec(out.dir), speed_scale);
 
+		out.air_time = 0;
 		out.vol_target.ground = 0.04*speed;
 		out.vol_target.emerge = 0.0;
 	} else
 	{
+		out.air_time++;
 		out.vol_target.ground = 0.0;
-		out.vol_target.emerge = 1.0;
+		if(out.air_time < WORM_NUM_SEGMENTS)
+			out.vol_target.emerge = 1.0;
+		else
+			out.vol_target.emerge = 0.0;
 		out.vol_target.shhh = 0.0;
 		out.vol_target.shaaa = 0.0;
 		out.boost = in.boost;
@@ -132,7 +139,10 @@ ld29_worm worm_update(ld29_worm in, const ld29_land* land)
 
 	out.vol_current.ground = (in.vol_current.ground*4 + out.vol_target.ground)/5;
 	whitgl_loop_volume(SOUND_GROUND, out.vol_current.ground);
-	out.vol_current.emerge = (in.vol_current.emerge + out.vol_target.emerge)/2;
+	if(out.vol_target.emerge > in.vol_current.emerge)
+		out.vol_current.emerge = (in.vol_current.emerge + out.vol_target.emerge)/2;
+	else
+		out.vol_current.emerge = (in.vol_current.emerge*14 + out.vol_target.emerge)/15;
 	whitgl_loop_volume(SOUND_EMERGE, out.vol_current.emerge);
 	out.vol_current.shhh = (in.vol_current.shhh*9 + out.vol_target.shhh)/10;
 	whitgl_loop_volume(SOUND_SHHH, out.vol_current.shhh);
