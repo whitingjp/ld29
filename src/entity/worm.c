@@ -271,7 +271,18 @@ ld29_worm_ai worm_ai_update(ld29_worm_ai in, const ld29_worm* worm, const ld29_l
 		out.wiggle_speed = 0.1+whitgl_randfloat()/10;
 	}
 	out.wiggle += in.wiggle_speed;
-	whitgl_fvec ideal_vector = whitgl_fvec_sub(in.target, worm->segments[0]);
+	whitgl_fvec ideal_vector;
+	whitgl_fvec ideal_vector_a = whitgl_fvec_sub(in.target, worm->segments[0]);
+	ideal_vector = ideal_vector_a;
+	whitgl_fvec ideal_vector_b = ideal_vector_a;
+	ideal_vector_b.x -= land->size.x;
+	if(whitgl_fvec_sqmagnitude(ideal_vector) > whitgl_fvec_sqmagnitude(ideal_vector_b))
+		ideal_vector = ideal_vector_b;
+	whitgl_fvec ideal_vector_c = ideal_vector_a;
+	ideal_vector_c.x += land->size.x;
+	if(whitgl_fvec_sqmagnitude(ideal_vector) > whitgl_fvec_sqmagnitude(ideal_vector_c))
+		ideal_vector = ideal_vector_c;
+
 	whitgl_float ideal_dir = whitgl_fvec_to_angle(ideal_vector) + whitgl_fsin(out.wiggle);
 	whitgl_float actual_dir = worm->dir;
 	float diff = ideal_dir - actual_dir;
