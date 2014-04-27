@@ -52,8 +52,7 @@ void game_update(ld29_game* g, whitgl_ivec screen_size)
 	land_update(g->land);
 	for(i=0; i<MAX_WORMS; i++)
 	{
-		// g->worms[i] = worm_update(g->worms[i], g->land, i==g->player);
-		g->worms[i] = worm_update(g->worms[i], g->land, false);
+		g->worms[i] = worm_update(g->worms[i], g->land, i==g->player);
 		if(g->worms[i].pregnancy == -1)
 		{
 			g->egg = egg_zero();

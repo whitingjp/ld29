@@ -87,7 +87,7 @@ ld29_worm worm_update(ld29_worm in, const ld29_land* land, bool is_player)
 		if(is_player)
 		{
 			press_left = whitgl_input_down(WHITGL_INPUT_LEFT);
-			press_right = whitgl_input_down(WHITGL_INPUT_LEFT);
+			press_right = whitgl_input_down(WHITGL_INPUT_RIGHT);
 		} else
 		{
 			press_left = in.ai.press_left;
