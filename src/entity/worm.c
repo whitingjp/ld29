@@ -18,6 +18,7 @@ ld29_worm worm_zero(const ld29_land* land)
 	out.boost = 0;
 	out.boost_dir = 0;
 	out.maw_anim = 0;
+	out.ripple = -1;
 	return out;
 }
 ld29_worm worm_update(ld29_worm in, const ld29_land* land)
@@ -99,6 +100,14 @@ ld29_worm worm_update(ld29_worm in, const ld29_land* land)
 		out.maw_anim--;
 		if(!in_land) out.maw_anim = 0;
 	}
+
+	out.ripple = in.ripple;
+	if(out.ripple != -1)
+	{
+		out.ripple++;
+		if(out.ripple >= WORM_NUM_SEGMENTS)
+			out.ripple = -1;
+	}
 	return out;
 }
 void worm_draw(ld29_worm worm, whitgl_ivec camera)
@@ -111,6 +120,7 @@ void worm_draw(ld29_worm worm, whitgl_ivec camera)
 		c.pos = whitgl_fvec_add(worm.segments[i], whitgl_ivec_to_fvec(camera));
 		c.size = (whitgl_float)(WORM_NUM_SEGMENTS-i+12)/12;
 		if(i%4==0) c.size *= 1.25;
+		if(i==worm.ripple) c.size *= 1.5;
 		whitgl_sys_draw_fcircle(c, color, 16);
 	}
 	// maw

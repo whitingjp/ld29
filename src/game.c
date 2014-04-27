@@ -51,9 +51,17 @@ void game_update(ld29_game* g)
 		g->humans[i] = human_update(g->humans[i], g->land);
 	for(i=0; i<MAX_HUMANS; i++)
 	{
+		if(!g->humans[i].alive)
+		{
+			whitgl_fvec human_pos = {whitgl_randint(g->land->size.x), 0};
+			g->humans[i] = human_zero(human_pos);
+		}
 		whitgl_fvec dist = whitgl_fvec_sub(g->humans[i].pos, g->worm.segments[0]);
 		if(whitgl_fvec_sqmagnitude(dist) < 16*16)
+		{
 			g->humans[i].alive = false;
+			g->worm.ripple = 0;
+		}
 	}
 	if(g->drill.attack.type != DAMAGE_NONE)
 	{

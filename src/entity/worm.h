@@ -14,6 +14,7 @@ typedef struct
 	whitgl_float boost;
 	whitgl_float boost_dir;
 	whitgl_float maw_anim;
+	whitgl_int ripple;
 } ld29_worm;
 ld29_worm worm_zero(const ld29_land* land);
 ld29_worm worm_update(ld29_worm in, const ld29_land* land);
