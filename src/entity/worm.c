@@ -11,7 +11,7 @@ ld29_worm worm_zero(const ld29_land* land)
 	ld29_worm out;
 	whitgl_fvec start = whitgl_fvec_zero;
 	start.x = whitgl_randint(land->size.x);
-	start.y = land->size.y-50;
+	start.y = land->size.y+100;
 	int i;
 	for(i=0; i<WORM_MAX_SEGMENTS; i++)
 	{
@@ -55,6 +55,7 @@ ld29_worm worm_update(ld29_worm in, const ld29_land* land, bool is_player, bool 
 	if(out.hurt_segment != -1)
 	{
 		out = in;
+		out.pregnancy = 0;
 		if(out.num_segments <= WORM_MIN_SEGMENTS || out.num_segments <= out.hurt_segment)
 			out.hurt_segment = -1;
 		else
@@ -205,6 +206,10 @@ ld29_worm worm_update(ld29_worm in, const ld29_land* land, bool is_player, bool 
 		out.vol_current.shaaa = (in.vol_current.shaaa*9 + out.vol_target.shaaa)/10;
 		whitgl_loop_volume(SOUND_SHAAA, out.vol_current.shaaa);
 	}
+
+	if(out.num_segments < WORM_MIN_SEGMENTS)
+		out.num_segments = WORM_MIN_SEGMENTS;
+
 
 	return out;
 }
