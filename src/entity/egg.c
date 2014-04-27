@@ -36,7 +36,7 @@ ld29_egg egg_update(ld29_egg in, const ld29_land* land, bool should_hatch)
 	if(should_hatch)
 	{
 		out.hatch += 1.0/(60.0*10);
-		if(whitgl_randfloat() > 0.95)
+		if(out.bounce == 0 && whitgl_randfloat() > 0.95)
 			out.bounce = 1;
 	}
 	out.bounce = whitgl_fmax(0, out.bounce-0.05);
