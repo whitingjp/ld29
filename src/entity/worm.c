@@ -19,7 +19,7 @@ ld29_worm worm_zero(const ld29_land* land)
 		out.has_ripple[i] = false;
 	}
 	out.speed = whitgl_fvec_zero;
-	out.dir = whitgl_pi/2;
+	out.dir = -whitgl_pi/2;
 	out.boost = 0;
 	out.boost_dir = 0;
 	out.maw_anim = 0;
@@ -32,6 +32,7 @@ ld29_worm worm_zero(const ld29_land* land)
 	out.pregnancy = 0;
 	out.alive = false;
 	out.ai = ld29_worm_ai_zero;
+	out.ignore_hollows_counter = 4;
 	return out;
 }
 ld29_worm worm_update(ld29_worm in, const ld29_land* land, bool is_player, bool broody)
@@ -45,6 +46,7 @@ ld29_worm worm_update(ld29_worm in, const ld29_land* land, bool is_player, bool 
 	out.num_segments = in.num_segments;
 	out.hurt_segment = in.hurt_segment;
 	out.pregnancy = in.pregnancy;
+	out.ignore_hollows_counter = whitgl_imax(0, in.ignore_hollows_counter-1);
 	out.ai = worm_ai_update(in.ai, &in, land);
 	int i;
 	for(i=0; i<in.num_segments-1; i++)
@@ -61,6 +63,8 @@ ld29_worm worm_update(ld29_worm in, const ld29_land* land, bool is_player, bool 
 	}
 
 	ld29_land_type type = land_get(land, whitgl_fvec_to_ivec(in.segments[0]));
+	if(out.ignore_hollows_counter > 0 && type != LAND_BEDROCK)
+		type = LAND_GROUND;
 	bool in_land = type == LAND_GROUND;
 	if(type == LAND_BEDROCK)
 	{
