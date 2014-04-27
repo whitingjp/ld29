@@ -10,6 +10,7 @@ static const whitgl_sys_color land_colors[LAND_MAX] =
 	{0x5a, 0x1c, 0x28, 0xff},
 	{0xb5, 0x1d, 0x3d, 0xff},
 	{0x63, 0x28, 0x47, 0xff},
+	{0x41, 0x45, 0x4d, 0xff},
 };
 
 void land_set(ld29_land* land, ld29_land_type t, whitgl_ivec pos)
@@ -25,7 +26,7 @@ void land_set(ld29_land* land, ld29_land_type t, whitgl_ivec pos)
 ld29_land_type land_get(const ld29_land* land, whitgl_ivec pos)
 {
 	if(pos.y < 0) return LAND_SKY;
-	if(pos.y >= land->size.y) return LAND_GROUND;
+	if(pos.y >= land->size.y) return LAND_BEDROCK;
 	pos.x = whitgl_iwrap(pos.x, 0, land->size.x);
 	int index = (pos.x+pos.y*land->size.x)*3;
 	int i;
@@ -43,46 +44,24 @@ void land_zero(ld29_land* land)
 	land->size.x = LAND_XRES;
 	land->size.y = LAND_YRES;
 
+	whitgl_ivec p;
+	for(p.x=0; p.x<land->size.x; p.x++)
+	{
+		int land_start = 100+whitgl_randint(2);
+		int bedrock_start = land->size.y-10+whitgl_randint(2);
+		for(p.y=0; p.y<land->size.y; p.y++)
+		{
+			if(p.y > bedrock_start)
+				land_set(land, LAND_BEDROCK, p);
+			else if(p.y > land_start)
+				land_set(land, LAND_GROUND, p);
+			else
+				land_set(land, LAND_SKY, p);
+		}
+	}
 	int i;
-	for(i=0; i<land->size.x*land->size.y*3; i+=3)
-	{
-		int y = i/(land->size.x*3);
-		if(y > 100)
-		{
-			land->data[i] = 0xb5;
-			land->data[i+1] = 0x1d;
-			land->data[i+2] = 0x3d;
-		}
-		else
-		{
-			land->data[i] = 0x5a;
-			land->data[i+1] = 0x1c;
-			land->data[i+2] = 0x28;
-		}
-	}
-	land_erode(land);
-}
-void land_erode(ld29_land* land)
-{
-	int num_checks = 1024*1024*2;
-	while(num_checks)
-	{
-		whitgl_ivec pos = whitgl_ivec_zero;
-		pos.x = whitgl_randint(land->size.x);
-		pos.y = whitgl_randint(land->size.y);
-		whitgl_ivec test_pos = pos;
-		test_pos.x += whitgl_randint(3)-1;
-		test_pos.y += whitgl_randint(3)-1;
-		if(land_get(land, test_pos) == LAND_GROUND)
-		{
-			land_set(land, LAND_GROUND, pos);
-		} else
-		{
-			if(land_get(land, pos) == LAND_GROUND)
-				land_set(land, LAND_TUNNEL, pos);
-		}
-		num_checks--;
-	}
+	for(i=0; i<1024; i++)
+		land_update(land);
 }
 void land_update(ld29_land* land)
 {
@@ -95,13 +74,16 @@ void land_update(ld29_land* land)
 		whitgl_ivec under_pos = pos;
 		under_pos.x += whitgl_randint(3)-1;
 		under_pos.y++;
-		if(land_get(land, under_pos) == LAND_GROUND)
+		ld29_land_type type = land_get(land, pos);
+		if(type == LAND_BEDROCK || type == LAND_SKY)
+			continue;
+		ld29_land_type under_type = land_get(land, under_pos);
+		if(under_type == LAND_GROUND || under_type == LAND_BEDROCK)
 		{
-			if(land_get(land, pos) != LAND_SKY)
 			land_set(land, LAND_GROUND, pos);
 		} else if(whitgl_randint(4) == 1)
 		{
-			if(land_get(land, pos) == LAND_GROUND)
+			if(type == LAND_GROUND)
 				land_set(land, LAND_TUNNEL, pos);
 		}
 		num_checks--;

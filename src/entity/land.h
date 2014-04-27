@@ -8,6 +8,7 @@ typedef enum
 	LAND_SKY,
 	LAND_GROUND,
 	LAND_TUNNEL,
+	LAND_BEDROCK,
 	LAND_MAX,
 } ld29_land_type;
 
@@ -20,7 +21,6 @@ typedef struct
 } ld29_land;
 
 void land_zero(ld29_land* land);
-void land_erode(ld29_land* land);
 void land_update(ld29_land* land);
 void land_splat(ld29_land* land, whitgl_fcircle c);
 void land_draw(const ld29_land* land, whitgl_ivec camera);
