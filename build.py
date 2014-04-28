@@ -90,6 +90,7 @@ if(plat == 'Windows'):
   targets += n.build(joinp(outdir, 'run_fullscreen.bat'), 'cp', joinp('windows', 'run_fullscreen.bat'))
 else:
   targets += n.build(joinp(outdir, 'libfmodex-4.44.15.so'), 'cp', joinp(inputdir, 'fmod', 'linux', 'lib', 'libfmodex-4.44.15.so'))
+targets += n.build(joinp(outdir, 'README.txt'), 'cp', joinp('README.txt'))
 n.newline()
 
 n.build('all', 'phony', targets)
